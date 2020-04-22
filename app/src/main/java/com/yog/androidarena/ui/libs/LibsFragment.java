@@ -323,17 +323,19 @@ public class LibsFragment extends Fragment {
     private void showShimmer()
     {
         Timber.d("show shimmer");
-        fragmentLibsBinding.includeShimmer.setVisibility(View.VISIBLE);
         fragmentLibsBinding.shimmer.startShimmer();
-        fragmentLibsBinding.libRec.setVisibility(View.GONE);
+        fragmentLibsBinding.shimmer.setVisibility(View.VISIBLE);
+
+
     }
 
     private void hideShimmer()
     {
         Timber.d("hide shimmer");
-        fragmentLibsBinding.includeShimmer.setVisibility(View.GONE);
         fragmentLibsBinding.shimmer.stopShimmer();
-        fragmentLibsBinding.libRec.setVisibility(View.VISIBLE);
+        fragmentLibsBinding.shimmer.setVisibility(View.GONE);
+
+         
     }
 
     private class LibListComparator implements Comparator<LibList> {

@@ -144,17 +144,17 @@ public class ThingsYouShouldKnowFragment extends Fragment {
     private void showShimmer()
     {
         Timber.d("show shimmer");
-        fragmentThingsYouShouldKnowBinding.includeShimmer.setVisibility(View.VISIBLE);
         fragmentThingsYouShouldKnowBinding.shimmer.startShimmer();
-        fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setVisibility(View.GONE);
+        fragmentThingsYouShouldKnowBinding.shimmer.setVisibility(View.VISIBLE);
+        //fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setVisibility(View.GONE);
     }
 
     private void hideShimmer()
     {
         Timber.d("hide shimmer");
-        fragmentThingsYouShouldKnowBinding.includeShimmer.setVisibility(View.GONE);
         fragmentThingsYouShouldKnowBinding.shimmer.stopShimmer();
-        fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setVisibility(View.VISIBLE);
+        fragmentThingsYouShouldKnowBinding.shimmer.setVisibility(View.GONE);
+        //fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setVisibility(View.VISIBLE);
     }
 
 }
