@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "859339384685",
+    "firebase_url": "https://android-arena-8d723.firebaseio.com",
+    "project_id": "android-arena-8d723",
+    "storage_bucket": "android-arena-8d723.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859339384685:android:a645c90d3c29877b7c5c64",
+        "android_client_info": {
+          "package_name": "com.yog.androidarena"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859339384685-tb7q01j89mp79vqnd5pkf1itq4eeuk5k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yog.androidarena",
+            "certificate_hash": "074cdb30aeed0d4e7372bf7420da66336fc18b8d"
+          }
+        },
+        {
+          "client_id": "859339384685-7d3rda82qa0cb6iu3vl5p11t5pne9uuj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1gPNKfMywyoeNSdsYlIvhbQWZ0__tnEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "859339384685-7d3rda82qa0cb6iu3vl5p11t5pne9uuj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

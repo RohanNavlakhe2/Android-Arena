@@ -1,0 +1,27 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <string name="app_name">Android Arena</string>
+    <string name="test_str">ekgkemgkm vekmkv vekmkm vekmkm vek vek ekmkemk vekm ekmvkevke vekn ven veveknk
+    ekgkemgkm vekmkv vekmkm vekmkm vek vek ekmkemk vekm ekmvkevke vekn ven veveknk
+    ekgkemgkm vekmkv vekmkm vekmkm vek vek ekmkemk vekm ekmvkevke vekn ven ypyp</string>
+    <string name="title_lib">Libraries</string>
+    <string name="title_home">Home</string>
+    <string name="title_articles">Articles</string>
+    <string name="title">Facebook Shimmer Effect</string>
+    <string name="some_more_things_about_this_library">Some More Things About This Library</string>
+    <string name="what_this_library_can_get_me">What This Library Can Get Me:</string>
+    <string name="lib_desc">Many times you may have got the requirement of making a ImageView in circle shape.You can achieve this by making a circle drawable and set it to the LinearLayout and put Imageview inside that LinearLayout. But now you dont need to do this because there is already a ThirdParty Library to get done this work for you.You can easily make a image circular using this library.</string>
+    <string name="how_to_implement_this_in_my_project">How To Implement this in My Project</string>
+    <string name="get_the_complete_project_with_step_by_step_code_explanation_our_github_page">Get The Complete Project With Step by Step code Explanation our Github Page:</string>
+    <string name="https_github_com">https://github.com</string>
+    <string name="library_link">Library Link:</string>
+
+
+
+    <string name="some_sec_point">The ScaleType is always CENTER_CROP and you\'ll get an exception if you try to change it.</string>
+    <string name="get_mail">--> Click on the E-mail icon to get the link directly on your mail.</string>
+
+    <!--Fragment Title-->
+    <string name="things_frag_title">Things You should know in Android</string>
+    <string name="lib_frag_title">Useful Android Libraries</string>
+    <string name="article_frag_title">Popular Articles on the web</string>
+</resources>

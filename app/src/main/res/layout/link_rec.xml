@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp10"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:id="@+id/linkTypeTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginBottom="@dimen/dp8"
+        android:fontFamily="@font/montserrat_bold"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/link"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="80"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginBottom="@dimen/dp8"
+            android:layout_marginStart="@dimen/dp12"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:text=""/>
+        <ImageView
+            android:id="@+id/sendLinkIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:src="@drawable/ic_gmail"/>
+    </LinearLayout>
+</LinearLayout>
+</layout>
