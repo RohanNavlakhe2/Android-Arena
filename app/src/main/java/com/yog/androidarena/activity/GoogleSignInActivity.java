@@ -19,6 +19,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.yog.androidarena.R;
 import com.yog.androidarena.util.Constants;
 import com.yog.androidarena.util.General;
+import com.yog.androidarena.util.NetworkChecking;
 
 import timber.log.Timber;
 
@@ -43,9 +44,16 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
         //loadNativeTemplateAd();
         //buildAd();
 
+        registerReceiver();
         activityGoogleSignInBinding.signInButton.setOnClickListener(this);
         activityGoogleSignInBinding.notNowBtn.setOnClickListener(this);
         configureGooglSignin();
+    }
+
+    private void registerReceiver()
+    {
+        Intent intent=new Intent(this, NetworkChecking.class);
+        //intent.addFlags(Intent.)
     }
 
     @Override

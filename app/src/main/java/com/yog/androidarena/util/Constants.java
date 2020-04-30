@@ -1,6 +1,6 @@
 package com.yog.androidarena.util;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Constants {
@@ -13,5 +13,8 @@ public class Constants {
   public static final String TEST_AD="ca-app-pub-3940256099942544/2247696110";
   public static final String BANNER_TEST_AD="ca-app-pub-3940256099942544~3347511713";
   public static final String CONTENT_URL="https://blog.mindorks.com/blogs/latest";
-  public static List<String> AD_TYPES=new ArrayList<>();
+
+  //By default putting one value to avoid exception in Random().nextInt()
+  // (When AdTypes are not loaded from firebase)
+  public static List<String> AD_TYPES= Collections.singletonList("https://blog.mindorks.com/blogs/latest");
 }

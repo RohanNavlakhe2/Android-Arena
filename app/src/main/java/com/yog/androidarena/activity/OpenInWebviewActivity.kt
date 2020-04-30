@@ -42,13 +42,11 @@ class OpenInWebviewActivity : AppCompatActivity() {
     private fun loadBannerAd() {
         MobileAds.initialize(this) {}
         val randomAdUrl = Random().nextInt(Constants.AD_TYPES.size)
-        val adRequest = AdRequest.Builder().
-                setContentUrl(Constants.AD_TYPES[randomAdUrl]).build()
+        val adRequest = AdRequest.Builder().setContentUrl(Constants.AD_TYPES[randomAdUrl]).build()
         activityOpenInWebviewBinding.adView.loadAd(adRequest)
     }
 
-    private fun progressOnLoading()
-    {
+    private fun progressOnLoading() {
         activityOpenInWebviewBinding.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, progress: Int) {
                 activityOpenInWebviewBinding.progressBar.progress = progress
@@ -82,4 +80,13 @@ class OpenInWebviewActivity : AppCompatActivity() {
         }
 
     }
+
+    override fun onBackPressed() {
+        if (activityOpenInWebviewBinding.webView.canGoBack())
+            activityOpenInWebviewBinding.webView.goBack()
+        else
+            super.onBackPressed()
+    }
+
+
 }
