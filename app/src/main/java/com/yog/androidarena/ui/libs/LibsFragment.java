@@ -2,7 +2,6 @@ package com.yog.androidarena.ui.libs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,19 +18,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.yog.androidarena.MainActivity;
 import com.yog.androidarena.R;
+import com.yog.androidarena.activity.MainActivity;
 import com.yog.androidarena.adapter.LibAdapter;
 import com.yog.androidarena.databinding.FragmentLibsBinding;
 import com.yog.androidarena.model.LibList;
-import com.yog.androidarena.util.General;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -39,17 +37,12 @@ public class LibsFragment extends Fragment {
 
     private FragmentLibsBinding fragmentLibsBinding;
     private Context context;
-
     //Firebase
     String TAG = "firebase result";
     private FirebaseFirestore db;
-
-    List<LibList> sortedAllLibsNameAndDescList = new ArrayList<>();
+    private List<LibList> sortedAllLibsNameAndDescList = new ArrayList<>();
     private LibListComparator libListComparator;
-    //List<DocumentSnapshot> documentSnapshotList;
-    List<DocumentSnapshot> sortedDocumentSnapshotList = new ArrayList<>();
-    List<Map> mapList;
-    private int compareResult;
+    private List<Map> mapList;
     private int noOfTimesSortMethodShouldBeCalled;
 
     @Override
@@ -64,7 +57,7 @@ public class LibsFragment extends Fragment {
 
         fragmentLibsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_libs, container, false);
         //setting title
-        ((MainActivity)context).setTitleAccordingToFragment(1);
+        ((MainActivity) context).setTitleAccordingToFragment(1);
         Timber.d("hide shimmer");
         showShimmer();
         //getting LibList (Name and short description)
@@ -72,45 +65,14 @@ public class LibsFragment extends Fragment {
         return fragmentLibsBinding.getRoot();
     }
 
-    /* private void configFirebaseCloud()
-     {
-         // Access a Cloud Firestore instance from your Activity
-         db = FirebaseFirestore.getInstance();
 
-         fragmentLibsBinding.loadDataBtn.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-
-                 db.collection("Libs")
-                         .get()
-                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                             @Override
-                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                 if (task.isSuccessful()) {
-                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                         if(document.getId().equals("0"))
-                                         //Log.i("cloudData", document.getId() + " => " + document.getData());
-                                         {
-                                             HashMap<String,Object> map= (HashMap<String, Object>) document.getData();
-                                             Intent intent = new Intent(context, LibExpansionActivity.class);
-                                             intent.putExtra("map", (Serializable)map);
-                                             startActivity(intent);
-                                         }
-                                         //fragmentLibsBinding.title.setText(document.get("Library Title").toString());
-
-
-                                     }
-                                 } else {
-                                     Log.i(TAG, "cloud", task.getException());
-                                 }
-                             }
-                         });
-             }
-         });
-
-     }
- */
     private void initLibRec(List<LibList> sortedLibList, List<DocumentSnapshot> sortedDocumentSnapshotList) {
+        int addNullAtForAd = 5;
+        while (addNullAtForAd < sortedLibList.size()) {
+            sortedLibList.add(addNullAtForAd, null);
+            sortedDocumentSnapshotList.add(addNullAtForAd, null);
+            addNullAtForAd += 5;
+        }
         fragmentLibsBinding.libRec.setLayoutManager(new LinearLayoutManager(context));
         fragmentLibsBinding.libRec.setAdapter(new LibAdapter(context, sortedLibList, sortedDocumentSnapshotList));
         hideShimmer();
@@ -119,9 +81,9 @@ public class LibsFragment extends Fragment {
     private void getLibListFromCloud() {
 
         Timber.i("method");
-        db = FirebaseFirestore.getInstance();
+        db = ((MainActivity) context).getDb();
         //making Firebase cache disabled
-        General.INSTANCE.settingFirebaseCacheToFalse(db);
+        //General.INSTANCE.settingFirebaseCacheToFalse(db);
 
         db.collection("LibList")
                 .get()
@@ -129,7 +91,7 @@ public class LibsFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            Log.i("fr", "task success");
+                            Timber.i("task success");
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
                                 HashMap<String, Object> map = (HashMap<String, Object>) document.getData();
@@ -157,7 +119,7 @@ public class LibsFragment extends Fragment {
         final List<DocumentSnapshot> documentSnapshotList = new ArrayList<>();
         //db=FirebaseFirestore.getInstance();
         db.collection("Libs")
-                .orderBy("0")
+                .orderBy("7")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -187,38 +149,54 @@ public class LibsFragment extends Fragment {
 
     private void extractDataFromMapList(List<Map> mapList, List<DocumentSnapshot> documentSnapshotList) {
         List<LibList> allLibsNameAndDescList = new ArrayList<>();
+        List<LibList> listTobeDisplayOnTheScreen = new ArrayList<>();
         //Log.i("lib","Map List Size"+mapList.size());
         for (Map eachLibInformation : mapList) {
             //adding each lib name and short desc to model class
             allLibsNameAndDescList.add(new LibList(eachLibInformation.get("0").toString(), eachLibInformation.get("1").toString()));
         }
 
-        //Log.i("lib","all Lib Size"+allLibsNameAndDescList.size());
 
-        //size of the list to constrain recursion count
-        noOfTimesSortMethodShouldBeCalled = allLibsNameAndDescList.size();
+        //noOfTimesSortMethodShouldBeCalled = 22 because we want to sort first 22 items only because
+        //in LibList collection first 22 items are not in sequence with respect to first 22 items in
+        //Libs collection.
+        noOfTimesSortMethodShouldBeCalled = 22;
 
         //Getting Sorted Lib Name and Short Desc List
-        //This method sorts LibList class objects list and DocumentSnapshot objects list based
+        //This method sorts LibList class objects list based
         //on the libName of each LibList object.
-        List<LibList> sortedLibList = sortListBasedOnLibName(allLibsNameAndDescList);
+
+        //making temp list so that main list should be affected by the sublist method.
+        List<LibList> tempAllLibsNameAndDescList = new ArrayList<>(allLibsNameAndDescList);
+        //sorting first 22 objects (second parameter of subList() considers -1 means it will 22 as 21).
+        List<LibList> sortedLibList = sortListBasedOnLibName(tempAllLibsNameAndDescList.subList(0, 22));
+        //objects from 22th index onwards
+        if (allLibsNameAndDescList.size() > 22) {
+            listTobeDisplayOnTheScreen
+                    = allLibsNameAndDescList.subList(22, allLibsNameAndDescList.size());
+            Collections.reverse(listTobeDisplayOnTheScreen);
+        }
+
+
+        //Adding the first 22 objects at last because we want newer objects at top.
+        listTobeDisplayOnTheScreen.addAll(sortedLibList);
+
         /**
          *  change on 19-4-20
          * List<LibList> sortedLibList = sortListBasedOnLibName(allLibsNameAndDescList, documentSnapshotList);
          */
 
+
         //Putting data(libName and short desc) on the ui
-        //initLibRec(sortedLibList, sortedDocumentSnapshotList);
-        initLibRec(sortedLibList,documentSnapshotList);
-        for (DocumentSnapshot documentSnapshot : documentSnapshotList) {
+        initLibRec(listTobeDisplayOnTheScreen, documentSnapshotList);
+        /*for (DocumentSnapshot documentSnapshot : documentSnapshotList) {
             //documentSnapshot.getData().get("0");
-            Timber.i(Objects.requireNonNull(Objects.requireNonNull(documentSnapshot.getData()).get("0")).toString());
-        }
+            //Timber.i(Objects.requireNonNull(Objects.requireNonNull(documentSnapshot.getData()).get("0")).toString());
+        }*/
     }
 
     private List<LibList> sortListBasedOnLibName(List<LibList> allLibsNameAndDescList) {
-        //Log.i("lib",allLibsNameAndDescList.size()+" all lib size before while");
-        //noOfTimesSortMethodShouldBeCalled>1 because in case of 1, no need for comparison
+         //noOfTimesSortMethodShouldBeCalled>1 because in case of 1, no need for comparison
         while (noOfTimesSortMethodShouldBeCalled > 1)
             /*if(noOfTimesSortMethodShouldBeCalled>1)*/ {
             //int i = 0, j = 1;
@@ -265,80 +243,30 @@ public class LibsFragment extends Fragment {
     private void findSmallestAndAddToTheList(List<LibList> tempLibAndDescList) {
         //Log.i("libDetailName","document list size:"+tempDocmentSnapShotList.size());
         //calling comparatore compare method
-        int i=0;
+        int i = 0;
         for (int j = 1; j < tempLibAndDescList.size(); j++) {
-            compareResult = libListComparator.compare(tempLibAndDescList.get(i), tempLibAndDescList.get(j));
+            int compareResult = libListComparator.compare(tempLibAndDescList.get(i), tempLibAndDescList.get(j));
             if (compareResult > 0)
                 i = j;
             //j++;
         }
         sortedAllLibsNameAndDescList.add(tempLibAndDescList.get(i));
-        //sortedDocumentSnapshotList.add(tempDocmentSnapShotList.get(i));
 
-        //--------------------------------------------------------------------------------------//
-       /* compareResult=libListComparator.compare(tempLibAndDescList.get(i), tempLibAndDescList.get(j));
-        if(compareResult>0)
-        {
-            //means libName of first object is grater than libName of second object.
-            //1
-            i = j;
-            j++;
-            //j value should be less than the list size
-             if (j < tempLibAndDescList.size())
-            {
-                findSmallestAndAddToTheList(tempLibAndDescList,tempDocmentSnapShotList,i,j);
-            }
-             else {
-                 //adding the smallest object
-                //adding the j-1 th element because it is smaller than i th element
-                // j-1 th element because j value will cross the index of the list.
-                sortedAllLibsNameAndDescList.add(tempLibAndDescList.get(j - 1));
-                sortedDocumentSnapshotList.add(tempDocmentSnapShotList.get(j-1));
-                Log.i("lib",sortedAllLibsNameAndDescList.get(0).getLibName()+" 1");
-                }
-        }
-        else if(compareResult<0)
-        {
-            //means libName of first object is smaller than libName of second object.
-            //-1
-            j++;
-            if (j < tempLibAndDescList.size()) {
-                findSmallestAndAddToTheList(tempLibAndDescList,tempDocmentSnapShotList,i,j);
-            }
-             else {
-                //adding the smallest object
-                //i th element because it is smaller than j th element
-                sortedAllLibsNameAndDescList.add(tempLibAndDescList.get(i));
-                sortedDocumentSnapshotList.add(tempDocmentSnapShotList.get(i));
-                Timber.i("%s -1", sortedAllLibsNameAndDescList.get(0).getLibName());
-            }
-
-        }else {
-            //0
-            //means libName of first object is equal to libName of second object.
-            Timber.i("0");
-        }*/
     }
 
-    private void showShimmer()
-    {
+    private void showShimmer() {
         Timber.d("show shimmer");
         fragmentLibsBinding.shimmer.startShimmer();
         fragmentLibsBinding.shimmer.setVisibility(View.VISIBLE);
-
-
     }
 
-    private void hideShimmer()
-    {
+    private void hideShimmer() {
         Timber.d("hide shimmer");
         fragmentLibsBinding.shimmer.stopShimmer();
         fragmentLibsBinding.shimmer.setVisibility(View.GONE);
-
-         
     }
 
-    private class LibListComparator implements Comparator<LibList> {
+    private static class LibListComparator implements Comparator<LibList> {
 
 
         @Override

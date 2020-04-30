@@ -16,12 +16,14 @@
     <string name="library_link">Library Link:</string>
 
 
-
     <string name="some_sec_point">The ScaleType is always CENTER_CROP and you\'ll get an exception if you try to change it.</string>
     <string name="get_mail">--> Click on the E-mail icon to get the link directly on your mail.</string>
 
     <!--Fragment Title-->
-    <string name="things_frag_title">Things You should know in Android</string>
+    <string name="things_frag_title">Things You should know</string>
     <string name="lib_frag_title">Useful Android Libraries</string>
     <string name="article_frag_title">Popular Articles on the web</string>
+    <string name="not_now">Not Now</string>
+    <string name="send_mail_or_not">To get the link on your Mail-Id you must Sign in First</string>
+    <string name="ok">Ok</string>
 </resources>

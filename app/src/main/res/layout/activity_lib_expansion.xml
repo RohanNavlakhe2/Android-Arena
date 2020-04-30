@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".LibExpansionActivity">
+    android:id="@+id/parent"
+    tools:context=".activity.LibExpansionActivity">
     <include layout="@layout/toolbar_at_lib_expansion_activity"
         android:id="@+id/includeToolbar"/>
     <androidx.core.widget.NestedScrollView
@@ -22,29 +23,12 @@
                  android:padding="@dimen/dp10"
                  android:descendantFocusability="blocksDescendants"
                  android:orientation="vertical">
-                 <!--<TextView
-                     android:id="@+id/libTitle"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:textSize="@dimen/sp18"
-                     android:textColor="@color/black"
-                     android:layout_marginStart="@dimen/dp20"
-                     android:text=""/>-->
-<!--@string/title-->
                  <!--What this Lib can Get me Section-->
                  <LinearLayout
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:orientation="vertical"
                      android:layout_marginTop="@dimen/dp6">
-                    <!-- <TextView
-                         android:id="@+id/headerTxt"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textColor="@color/black"
-                         android:fontFamily="@font/montserrat_bold"
-                         android:textSize="@dimen/sp16"
-                         android:text="@string/what_this_library_can_get_me"/>-->
                      <TextView
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
@@ -64,7 +48,10 @@
                          android:layout_marginEnd="@dimen/dp20"
                          android:layout_marginTop="@dimen/dp8"
                          android:layout_marginBottom="@dimen/dp8"/>
-                     <!--@string/lib_desc-->
+                     <!--Ad-->
+                     <include layout="@layout/native_rec_adview"
+                         android:id="@+id/includeNativeSmallAd"/>
+                     <!--//Ad-->
                      <!--Some more things section-->
                     <androidx.recyclerview.widget.RecyclerView
                         android:visibility="gone"
@@ -72,110 +59,28 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/someMoreThingsRec"/>
                      <!--Some more things section-->
+                     <!--Ad-->
+                   <!--  <include android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         layout="@layout/native_rec_adview"
+                         android:id="@+id/includeNativeSmallAd2"
+                         />-->
+                     <!--//Ad-->
                  </LinearLayout>
                  <!--What this Lib can Get me Section-->
-
-                 <!--How To Implement Section-->
-               <!--  <LinearLayout
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="@dimen/dp10"
-                     android:orientation="vertical">
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textColor="@color/black"
-                         android:layout_marginBottom="@dimen/dp8"
-                         android:fontFamily="@font/montserrat_bold"
-                         android:textSize="@dimen/sp16"
-                         android:text="@string/how_to_implement_this_in_my_project"/>
-                     <androidx.recyclerview.widget.RecyclerView
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:id="@+id/howToImplementRec"/>
-                 </LinearLayout>-->
-                 <!--How To Implement Section-->
 
                  <!--Link Section-->
                  <androidx.recyclerview.widget.RecyclerView
                      android:id="@+id/linkRec"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"/>
-                 <!--<LinearLayout
-                     android:layout_width="match_parent"
+                 <!--Ad-->
+                <!-- <include android:layout_width="match_parent"
                      android:layout_height="wrap_content"
-                     android:layout_marginTop="@dimen/dp10"
-                     android:orientation="vertical">
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textColor="@color/black"
-                         android:layout_marginBottom="@dimen/dp8"
-                         android:fontFamily="@font/montserrat_bold"
-                         android:text="@string/get_the_complete_project_with_step_by_step_code_explanation_our_github_page"/>
-                     <LinearLayout
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:weightSum="100"
-                         android:orientation="horizontal">
-                      <TextView
-                          android:id="@+id/myGithubLink"
-                         android:layout_width="0dp"
-                         android:layout_height="wrap_content"
-                          android:layout_weight="80"
-                         android:textColor="@color/colorPrimary"
-                         android:layout_marginBottom="@dimen/dp8"
-                          android:layout_marginStart="@dimen/dp12"
-                          android:fontFamily="@font/montserrat_semi_bold"
-                          android:text=""/>
-                         <ImageView
-                             android:id="@+id/sendGithubLink"
-                             android:layout_width="0dp"
-                             android:layout_height="wrap_content"
-                             android:layout_weight="20"
-                             android:src="@drawable/ic_gmail"/>
-                     </LinearLayout>
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textColor="@color/black"
-                         android:layout_marginBottom="@dimen/dp8"
-                         android:fontFamily="@font/montserrat_bold"
-                         android:text="@string/library_link"/>
-                     <LinearLayout
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:weightSum="100"
-                         android:orientation="horizontal">
-                         <TextView
-                             android:id="@+id/libraryLink"
-                             android:layout_width="0dp"
-                             android:layout_height="wrap_content"
-                             android:layout_weight="80"
-                             android:textColor="@color/colorPrimary"
-                             android:layout_marginBottom="@dimen/dp8"
-                             android:layout_marginStart="@dimen/dp12"
-                             android:fontFamily="@font/montserrat_semi_bold"
-                             android:text=""/>
-                         <ImageView
-                             android:id="@+id/sendLibraryLink"
-                             android:layout_width="0dp"
-                             android:layout_height="wrap_content"
-                             android:layout_weight="20"
-                             android:src="@drawable/ic_gmail"/>
-                     </LinearLayout>
-                     &lt;!&ndash; android:id="@+id/libraryLink"&ndash;&gt;
-                     <TextView
-                         android:id="@+id/sendMail"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="@string/get_mail"
-                         android:padding="@dimen/dp8"
-                         android:fontFamily="@font/montserrat_semi_bold"
-                         android:textSize="@dimen/sp11"
-                         android:textColor="@color/black"
-                         android:layout_marginTop="@dimen/dp8"/>
-                 </LinearLayout>-->
+                     layout="@layout/native_rec_adview"
+                     android:id="@+id/includeNativeSmallAd3"
+                     />-->
+                 <!--//Ad-->
              </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

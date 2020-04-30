@@ -21,5 +21,10 @@ public class MainApplication extends Application {
                         InstabugInvocationEvent.SHAKE,
                         InstabugInvocationEvent.FLOATING_BUTTON)
                 .build();
+
     }
+
+
+
+
 }

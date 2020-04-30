@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_articles"
-        android:name="com.yog.androidarena.ui.notifications.NotificationsFragment"
+        android:name="com.yog.androidarena.ui.articles.ArticlesFragment"
         android:label="@string/title_articles"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_articles" />
 </navigation>

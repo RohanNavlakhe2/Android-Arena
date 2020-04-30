@@ -18,14 +18,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.yog.androidarena.MainActivity;
 import com.yog.androidarena.R;
+import com.yog.androidarena.activity.MainActivity;
 import com.yog.androidarena.adapter.LibAdapter;
 import com.yog.androidarena.databinding.FragmentThingsYouShouldKnowBinding;
 import com.yog.androidarena.model.LibList;
-import com.yog.androidarena.util.General;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +35,7 @@ import timber.log.Timber;
 
 public class ThingsYouShouldKnowFragment extends Fragment {
 
+    private static final String TAG="life";
     private FragmentThingsYouShouldKnowBinding fragmentThingsYouShouldKnowBinding;
     private Context context;
     private FirebaseFirestore db;
@@ -42,6 +43,7 @@ public class ThingsYouShouldKnowFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Timber.tag(TAG).d("on create frag id:%s", this.getId());
         super.onCreate(savedInstanceState);
         context = getContext();
     }
@@ -58,9 +60,11 @@ public class ThingsYouShouldKnowFragment extends Fragment {
 
     private void getThingsYouShouldKnowListFromCloud() {
         Timber.i("method");
-        db = FirebaseFirestore.getInstance();
+        /*db = FirebaseFirestore.getInstance();
         //making Firebase cache disabled
-        General.INSTANCE.settingFirebaseCacheToFalse(db);
+        General.INSTANCE.settingFirebaseCacheToFalse(db);*/
+
+        db=((MainActivity)context).getDb();
 
         db.collection("ThingsYouShouldKnowList")
                 .get()
@@ -123,17 +127,32 @@ public class ThingsYouShouldKnowFragment extends Fragment {
 
     private void extractDataFromMapList(List<DocumentSnapshot> documentSnapshotList) {
         List<LibList> allThingsNameAndDescList = new ArrayList<>();
+        List<LibList> listToDisplay=new ArrayList<>();
         //Log.i("lib","Map List Size"+mapList.size());
         for (Map eachLibInformation : mapList) {
             //adding each lib name and short desc to model class
             allThingsNameAndDescList.add(new LibList(Objects.requireNonNull(eachLibInformation.get("0")).toString(), eachLibInformation.get("1").toString()));
         }
 
-        initLibRec(allThingsNameAndDescList, documentSnapshotList);
+        List<LibList> tempAllThingsNameAndDescList=new ArrayList<>(allThingsNameAndDescList);
+        if(allThingsNameAndDescList.size()>20) {
+            listToDisplay = tempAllThingsNameAndDescList.subList(20, allThingsNameAndDescList.size());
+            Collections.reverse(listToDisplay);
+        }
+
+        listToDisplay.addAll(allThingsNameAndDescList.subList(0,20));
+        initLibRec(listToDisplay, documentSnapshotList);
 
     }
 
     private void initLibRec(List<LibList> allThingsNameAndDescList, List<DocumentSnapshot> documentSnapshotList) {
+        int addNullAtForAd=5;
+        while (addNullAtForAd<allThingsNameAndDescList.size())
+        {
+            allThingsNameAndDescList.add(addNullAtForAd,null);
+            documentSnapshotList.add(addNullAtForAd,null);
+            addNullAtForAd+=5;
+        }
         fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setLayoutManager(new LinearLayoutManager(context));
         fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setAdapter(new LibAdapter(context, allThingsNameAndDescList, documentSnapshotList));
         hideShimmer();
@@ -146,15 +165,37 @@ public class ThingsYouShouldKnowFragment extends Fragment {
         Timber.d("show shimmer");
         fragmentThingsYouShouldKnowBinding.shimmer.startShimmer();
         fragmentThingsYouShouldKnowBinding.shimmer.setVisibility(View.VISIBLE);
-        //fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setVisibility(View.GONE);
-    }
+     }
 
     private void hideShimmer()
     {
         Timber.d("hide shimmer");
         fragmentThingsYouShouldKnowBinding.shimmer.stopShimmer();
         fragmentThingsYouShouldKnowBinding.shimmer.setVisibility(View.GONE);
-        //fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setVisibility(View.VISIBLE);
+     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Timber.tag(TAG).d("on resume frag id:%s",this.getId());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Timber.tag(TAG).d("on start frag id:%s",this.getId());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Timber.tag(TAG).d("on stop frag id:%s",this.getId());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Timber.tag(TAG).d("on destroy frag id:%s",this.getId());
     }
 
 }

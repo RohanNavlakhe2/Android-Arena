@@ -19,5 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/subPointsRec"/>
+    <include  android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp5"
+        android:visibility="gone"
+        layout="@layout/native_rec_adview"
+        android:id="@+id/includeNativeSmallAd"/>
     </LinearLayout>
 </layout>

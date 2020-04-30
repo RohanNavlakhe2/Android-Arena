@@ -38,6 +38,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'com.google.firebase:firebase-firestore:21.4.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -59,4 +61,21 @@ dependencies {
 
     //shimmer
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    //ballon
+    implementation "com.github.skydoves:balloon:1.1.2"
+
+    // FirebaseUI for Cloud Firestore
+    implementation 'com.firebaseui:firebase-ui-firestore:6.2.1'
+    implementation 'android.arch.paging:runtime:1.0.1'
+
+    //webview
+    implementation 'com.thefinestartist:finestwebview:1.2.7'
+
+    //Mobile Ads Sdk
+    implementation 'com.google.android.gms:play-services-ads:19.1.0'
+
+    //Native Ad Template
+    implementation project(':nativetemplates')
 }

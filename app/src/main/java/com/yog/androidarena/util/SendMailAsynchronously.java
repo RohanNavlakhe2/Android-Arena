@@ -2,10 +2,11 @@ package com.yog.androidarena.util;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.yog.androidarena.java_mail_api.GMailSender;
+
+import timber.log.Timber;
 
 public class SendMailAsynchronously extends AsyncTask<String,String,String>
 {
@@ -26,10 +27,10 @@ public class SendMailAsynchronously extends AsyncTask<String,String,String>
             GMailSender sender = new GMailSender("anroidartsdevelopers@gmail.com",
                     "supercoder2@");
             sender.sendMail(strings[0], strings[1],
-                    "anroidartsdevelopers@gmail.com", "rohannavlakhe2@gmail.com");
+                    "anroidartsdevelopers@gmail.com",strings[2]);
             return "Email Successfully sent";
         } catch (Exception e) {
-            Log.e("SendMail", e.getMessage(), e);
+            Timber.e(e);
             return "Email Send failed";
         }
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/dp7"
+    app:cardCornerRadius="@dimen/dp5"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.google.android.ads.nativetemplates.TemplateView
+        android:id="@+id/smallNativeTemplate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:gnt_template_type="@layout/gnt_small_template_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+</androidx.cardview.widget.CardView>
+</layout>
