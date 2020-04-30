@@ -14,7 +14,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -107,24 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void loadAdType() {
-        //General.INSTANCE.settingFirebaseCacheToFalse(db);
-        db.collection("AdType")
-                .document("Ad")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Constants.AD_TYPES = (List<String>) task.getResult().get("0");
-                        if (Constants.AD_TYPES != null) {
-                            for (String adType : Constants.AD_TYPES)
-                                Timber.tag("ad_tyep").d(adType);
-                        }
-                    }
-                });
 
-
-    }
 
     private void loadADType() {
         General.INSTANCE.settingFirebaseCacheToFalse(db);
