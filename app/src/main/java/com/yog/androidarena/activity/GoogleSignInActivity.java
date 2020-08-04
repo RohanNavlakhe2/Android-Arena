@@ -42,7 +42,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
 
         //loadNativeTemplateAd();
         //buildAd();
-        
+
         activityGoogleSignInBinding.signInButton.setOnClickListener(this);
         activityGoogleSignInBinding.notNowBtn.setOnClickListener(this);
         configureGooglSignin();
