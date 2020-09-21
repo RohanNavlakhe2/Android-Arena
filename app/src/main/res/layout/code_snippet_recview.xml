@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
        <include layout="@layout/no_txt_recview"
            android:id="@+id/includeNoTxtRecView"/>
        <!--Code Snippet view-->
        <ImageView
+           android:id="@+id/codeSnippet"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/codeSnippet"
-           android:layout_margin="@dimen/dp5"/>
+           android:layout_margin="@dimen/dp5"
+           android:adjustViewBounds="true"
+           android:background="#C5BCBD"
+           />
+       <!--  android:background="#C5BCBD"-->
        <!--@string/code_snippet-->
 </LinearLayout>
 </layout>

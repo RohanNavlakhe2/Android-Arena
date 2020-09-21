@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.ads.nativetemplates.TemplateView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,17 +30,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import timber.log.Timber;
 
 public class ThingsYouShouldKnowFragment extends Fragment {
 
-    private static final String TAG="life";
+    private static final String TAG = "life";
     private FragmentThingsYouShouldKnowBinding fragmentThingsYouShouldKnowBinding;
     private Context context;
     private FirebaseFirestore db;
     private List<Map> mapList;
+    private List<Object> allThingsAndAdList;
+    private List<DocumentSnapshot> documentSnapshotList;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,20 +55,24 @@ public class ThingsYouShouldKnowFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         fragmentThingsYouShouldKnowBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.fragment_things_you_should_know, container, false);
+        return fragmentThingsYouShouldKnowBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         //setting title
-        ((MainActivity)context).setTitleAccordingToFragment(0);
+        ((MainActivity) context).setTitleAccordingToFragment(0);
         showShimmer();
         getThingsYouShouldKnowListFromCloud();
-        return fragmentThingsYouShouldKnowBinding.getRoot();
+
     }
 
     private void getThingsYouShouldKnowListFromCloud() {
         Timber.i("method");
-        /*db = FirebaseFirestore.getInstance();
-        //making Firebase cache disabled
-        General.INSTANCE.settingFirebaseCacheToFalse(db);*/
 
-        db=((MainActivity)context).getDb();
+
+        db = ((MainActivity) context).getDb();
 
         db.collection("ThingsYouShouldKnowList")
                 .get()
@@ -72,9 +80,11 @@ public class ThingsYouShouldKnowFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            if(task.getResult() != null)
+                            {
                             Timber.i("task success");
-                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                
                                 HashMap<String, Object> map = (HashMap<String, Object>) document.getData();
                                 //getting List of Map
                                 mapList = (List<Map>) map.get("0");
@@ -82,8 +92,9 @@ public class ThingsYouShouldKnowFragment extends Fragment {
 
                                 //Getting Lib complete Detail
                                 getLibDataFromCloud();
-
                             }
+                            }else
+                                Timber.d("Task Null");
                         } else {
                             Timber.i(task.getException(), "task fail");
                             //show some error image
@@ -109,7 +120,7 @@ public class ThingsYouShouldKnowFragment extends Fragment {
                             QuerySnapshot querySnapshot = task.getResult();
                             //Log.i("libDetailName", "on comp for");
                             //Each Document Contains Data for Each Library Complete detail
-                            assert querySnapshot != null;
+                            if(querySnapshot != null)
                             documentSnapshotList.addAll(querySnapshot.getDocuments());
 
                             //extracting data from the map
@@ -127,75 +138,100 @@ public class ThingsYouShouldKnowFragment extends Fragment {
 
     private void extractDataFromMapList(List<DocumentSnapshot> documentSnapshotList) {
         List<LibList> allThingsNameAndDescList = new ArrayList<>();
-        List<LibList> listToDisplay=new ArrayList<>();
+        List<LibList> listToDisplay = new ArrayList<>();
         //Log.i("lib","Map List Size"+mapList.size());
         for (Map eachLibInformation : mapList) {
             //adding each lib name and short desc to model class
-            allThingsNameAndDescList.add(new LibList(Objects.requireNonNull(eachLibInformation.get("0")).toString(), eachLibInformation.get("1").toString()));
+            if(eachLibInformation.get("0")  != null && eachLibInformation.get("1") != null)
+            allThingsNameAndDescList.add(new LibList(eachLibInformation.get("0").toString(), eachLibInformation.get("1").toString()));
         }
 
-        List<LibList> tempAllThingsNameAndDescList=new ArrayList<>(allThingsNameAndDescList);
-        if(allThingsNameAndDescList.size()>20) {
+        List<LibList> tempAllThingsNameAndDescList = new ArrayList<>(allThingsNameAndDescList);
+        if (allThingsNameAndDescList.size() > 20) {
             listToDisplay = tempAllThingsNameAndDescList.subList(20, allThingsNameAndDescList.size());
             Collections.reverse(listToDisplay);
         }
 
-        listToDisplay.addAll(allThingsNameAndDescList.subList(0,20));
-        initLibRec(listToDisplay, documentSnapshotList);
+        listToDisplay.addAll(allThingsNameAndDescList.subList(0, 20));
+        this.documentSnapshotList = documentSnapshotList;
+        addAdsToList(listToDisplay);
+        //initLibRec(listToDisplay, documentSnapshotList);
 
     }
 
-    private void initLibRec(List<LibList> allThingsNameAndDescList, List<DocumentSnapshot> documentSnapshotList) {
-        int addNullAtForAd=5;
-        while (addNullAtForAd<allThingsNameAndDescList.size())
-        {
-            allThingsNameAndDescList.add(addNullAtForAd,null);
-            documentSnapshotList.add(addNullAtForAd,null);
-            addNullAtForAd+=5;
-        }
+    private void initLibRec() {
         fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setLayoutManager(new LinearLayoutManager(context));
-        fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setAdapter(new LibAdapter(context, allThingsNameAndDescList, documentSnapshotList));
+        fragmentThingsYouShouldKnowBinding.thingsYouShouldKnowRec.setAdapter(new LibAdapter(context, allThingsAndAdList, documentSnapshotList));
         hideShimmer();
     }
 
+    private void addAdsToList(List<LibList> allThingsList) {
+        TemplateView templateView;
+        allThingsAndAdList = new ArrayList<>(allThingsList);
+        int addAdAfterEvery = 7;
+
+        for (int i = 7; i < allThingsAndAdList.size(); i += addAdAfterEvery) {
+            if (isAdded()) {
+                Timber.d("Fragment Added");
+                templateView = getLayoutInflater().inflate(R.layout.native_rec_adview, null)
+                        .findViewById(R.id.smallNativeTemplate);
+                allThingsAndAdList.add(i, templateView);
+                documentSnapshotList.add(i, null);
+            } else
+                Timber.d("Fragment Not Added");
+        }
 
 
-    private void showShimmer()
-    {
+        loadAds();
+
+    }
+
+    private void loadAds() {
+        ((MainActivity) context).loadAd(7, allThingsAndAdList);
+        initLibRec();
+    }
+
+
+    private void showShimmer() {
         Timber.d("show shimmer");
         fragmentThingsYouShouldKnowBinding.shimmer.startShimmer();
         fragmentThingsYouShouldKnowBinding.shimmer.setVisibility(View.VISIBLE);
-     }
+    }
 
-    private void hideShimmer()
-    {
+    private void hideShimmer() {
         Timber.d("hide shimmer");
         fragmentThingsYouShouldKnowBinding.shimmer.stopShimmer();
         fragmentThingsYouShouldKnowBinding.shimmer.setVisibility(View.GONE);
-     }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        Timber.tag(TAG).d("on resume frag id:%s",this.getId());
+        Timber.tag(TAG).d("on resume frag id:%s", this.getId());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Timber.tag(TAG).d("on start frag id:%s",this.getId());
+        Timber.tag(TAG).d("on start frag id:%s", this.getId());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Timber.tag(TAG).d("on stop frag id:%s",this.getId());
+        Timber.tag(TAG).d("on stop frag id:%s", this.getId());
     }
 
     @Override
     public void onDestroy() {
+        /*for(Object item:allThingsAndAdList)
+        {
+            if(item instanceof TemplateView)
+                ((TemplateView)item).getNativeAdView().destroy();
+        }*/
         super.onDestroy();
-        Timber.tag(TAG).d("on destroy frag id:%s",this.getId());
+        Timber.tag(TAG).d("on destroy frag id:%s", this.getId());
     }
+
 
 }

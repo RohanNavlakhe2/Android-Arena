@@ -2,20 +2,14 @@ package com.yog.androidarena.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.ads.nativetemplates.NativeTemplateStyle;
 import com.google.android.ads.nativetemplates.TemplateView;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yog.androidarena.R;
@@ -23,20 +17,16 @@ import com.yog.androidarena.activity.LibExpansionActivity;
 import com.yog.androidarena.databinding.LibRecviewBinding;
 import com.yog.androidarena.databinding.NativeRecAdviewBinding;
 import com.yog.androidarena.model.LibList;
-import com.yog.androidarena.util.Constants;
-import com.yog.androidarena.util.General;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class LibAdapter extends RecyclerView.Adapter {
     private Context context;
     private FirebaseFirestore db;
-    private LibRecviewBinding libRecBinding;
-    private NativeRecAdviewBinding nativeRecAdviewBinding;
     private List<LibList> libList;
+    private List<Object> libAndAdList;
     private List<DocumentSnapshot> documentSnapshotList;
     private final int AD_VIEW_TYPE=-1;
     //private boolean adView=false;
@@ -44,9 +34,15 @@ public class LibAdapter extends RecyclerView.Adapter {
     private static final int CONTENT = 0;
     private static final int AD = 1;
 
-    public LibAdapter(Context context, List<LibList> libList,List<DocumentSnapshot> documentSnapshotList) {
+    /*public LibAdapter(Context context, List<LibList> libList, List<DocumentSnapshot> documentSnapshotList) {
         this.context = context;
         this.libList=libList;
+        this.documentSnapshotList=documentSnapshotList;
+    }*/
+
+    public LibAdapter(Context context, List<Object> libAndAdList,List<DocumentSnapshot> documentSnapshotList) {
+        this.context = context;
+        this.libAndAdList=libAndAdList;
         this.documentSnapshotList=documentSnapshotList;
     }
 
@@ -61,12 +57,14 @@ public class LibAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType==AD_VIEW_TYPE) {
-            nativeRecAdviewBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.native_rec_adview, parent, false);
-            return new Holder(nativeRecAdviewBinding.getRoot());
+            NativeRecAdviewBinding nativeRecAdviewBinding =
+                    DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.native_rec_adview, parent, false);
+            return new AdViewHolder(nativeRecAdviewBinding);
         }
         else {
-            libRecBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.lib_recview, parent, false);
-            return new Holder(libRecBinding.getRoot());
+            LibRecviewBinding libRecBinding =
+                    DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.lib_recview, parent, false);
+            return new Holder(libRecBinding);
         }
 
 
@@ -74,15 +72,30 @@ public class LibAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(getItemViewType(position)==AD_VIEW_TYPE)
+        if(holder instanceof AdViewHolder)
         {
+            TemplateView templateView = (TemplateView) libAndAdList.get(position);
+            AdViewHolder adViewHolder = (AdViewHolder) holder;
+
+            if(adViewHolder.nativeRecAdviewBinding.nativeAdCard.getChildCount() > 0)
+                adViewHolder.nativeRecAdviewBinding.nativeAdCard.removeAllViews();
+            if(templateView.getParent() != null)
+                ((ViewGroup)templateView.getParent()).removeView(templateView);
+
+            adViewHolder.nativeRecAdviewBinding.nativeAdCard.addView(templateView);
+
+
+           // ((AdViewHolder) holder).nativeRecAdviewBinding.smallNativeTemplate.se
+           /* AdViewHolder adViewHolder = (AdViewHolder)holder;
             int randomAdUrl=new Random().nextInt(Constants.AD_TYPES.size());
             General.INSTANCE.loadNativeTemplateAd
-                    (context,nativeRecAdviewBinding.smallNativeTemplate,Constants.AD_TYPES.get(randomAdUrl));
+                    (context,adViewHolder.nativeRecAdviewBinding.smallNativeTemplate,Constants.AD_TYPES.get(randomAdUrl));*/
            //loadNativeTemplateAd();
         }else {
-            libRecBinding.libName.setText(libList.get(position).getLibName());
-            libRecBinding.libShortDesc.setText(libList.get(position).getLibShortDesc());
+            Holder libHolder = (Holder)holder;
+            LibList lib = (LibList) libAndAdList.get(position);
+            libHolder.libRecviewBinding.libName.setText(lib.getLibName());
+            libHolder.libRecviewBinding.libShortDesc.setText(lib.getLibShortDesc());
 
             holder.itemView.setOnClickListener(view -> {
                 //configFirebaseCloud(position);
@@ -93,13 +106,15 @@ public class LibAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return libList.size();
+        return libAndAdList.size();
     }
 
 
     @Override
     public int getItemViewType(int position) {
-        if(libList.get(position)==null)
+        /*if(libList.get(position)==null)
+            return AD_VIEW_TYPE;*/
+        if(libAndAdList.get(position) instanceof TemplateView)
             return AD_VIEW_TYPE;
         return position;
 
@@ -120,32 +135,22 @@ public class LibAdapter extends RecyclerView.Adapter {
         context.startActivity(intent);
     }
 
-    private void loadNativeTemplateAd() {
-        //MobileAds.initialize(this, "[_app-id_]");
-        AdLoader adLoader = new AdLoader.Builder(context, Constants.TEST_AD)
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        NativeTemplateStyle styles = new
-                                NativeTemplateStyle.Builder().
-                                withMainBackgroundColor(new ColorDrawable(context.getResources().getColor(R.color.transperent))).build();
 
-                        TemplateView template =nativeRecAdviewBinding.smallNativeTemplate;
-                        template.setStyles(styles);
-                        template.setNativeAd(unifiedNativeAd);
+    private static class AdViewHolder extends RecyclerView.ViewHolder{
 
-                    }
-                })
-                .build();
-
-        adLoader.loadAd(new AdRequest.Builder().build());
+        protected NativeRecAdviewBinding nativeRecAdviewBinding;
+        AdViewHolder(NativeRecAdviewBinding nativeRecAdviewBinding) {
+            super(nativeRecAdviewBinding.getRoot());
+            this.nativeRecAdviewBinding = nativeRecAdviewBinding;
+        }
     }
-
 
     private static class Holder extends RecyclerView.ViewHolder{
 
-        Holder(@NonNull View itemView) {
-            super(itemView);
+        protected LibRecviewBinding libRecviewBinding;
+        Holder(LibRecviewBinding libRecviewBinding) {
+            super(libRecviewBinding.getRoot());
+            this.libRecviewBinding = libRecviewBinding;
         }
     }
 }

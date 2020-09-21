@@ -10,5 +10,6 @@
     <color name="transperent">#0000ffff</color>
     <color name="green">#2C9389</color>
     <color name="light_green">#4FC0B9</color>
+    <color name="yellow">#FFCC66</color>
 
 </resources>

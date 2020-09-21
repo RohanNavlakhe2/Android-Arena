@@ -4,6 +4,11 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +21,15 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.VideoOptions;
+import com.google.android.gms.ads.formats.MediaView;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.yog.androidarena.R;
@@ -23,7 +37,6 @@ import com.yog.androidarena.adapter.LinkAdapter;
 import com.yog.androidarena.adapter.SomeMoreThingsAdapter;
 import com.yog.androidarena.databinding.ActivityLibExpansionBinding;
 import com.yog.androidarena.util.Constants;
-import com.yog.androidarena.util.General;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +50,20 @@ public class LibExpansionActivity extends AppCompatActivity {
 
     private ActivityLibExpansionBinding activityLibExpansionBinding;
     private HashMap<String, Object> map;
+    private UnifiedNativeAd nativeAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityLibExpansionBinding = DataBindingUtil.setContentView(this, R.layout.activity_lib_expansion);
-        //makingAdVisibilityGoneByDefault();
+
+        //load ad (Which at the end of the page)
+        int randomAdUrl = new Random().nextInt(Constants.AD_TYPES.size());
+        /*General.INSTANCE.loadNativeTemplateAd
+                (this,activityLibExpansionBinding.mediumAdAtExpansion,Constants.AD_TYPES.get(randomAdUrl));*/
+        fetchAd(Constants.AD_TYPES.get(randomAdUrl));
+
         setData();
 
     }
@@ -65,8 +86,6 @@ public class LibExpansionActivity extends AppCompatActivity {
         }
 
 
-
-
         //setting intro text
 
         if (introAndSectionsList != null) {
@@ -75,10 +94,7 @@ public class LibExpansionActivity extends AppCompatActivity {
 
         }
 
-        //load ad
-        int randomAdUrl=new Random().nextInt(Constants.AD_TYPES.size());
-        General.INSTANCE.loadNativeTemplateAd
-                (this,activityLibExpansionBinding.includeNativeSmallAd.smallNativeTemplate,Constants.AD_TYPES.get(randomAdUrl));
+
 
         /*if introAndSectionsList.size()>1 means we have sub sections like (cons,someMoreThings)*/
         //introAndSectionsList[0] will always contain introduction to the lib
@@ -95,7 +111,7 @@ public class LibExpansionActivity extends AppCompatActivity {
 
             //passing sublist to adapter which is from 1 to size-1 because index contains the intro string.
             List<Map<String, Object>> sectionsList = introAndSectionsList.subList(1, introAndSectionsList.size());
-            int addAdAt = 1;
+            /*int addAdAt = 1;
             while (!(addAdAt > sectionsList.size())) {
                 if (addAdAt == sectionsList.size()) {
                     sectionsList.add(null);
@@ -103,7 +119,7 @@ public class LibExpansionActivity extends AppCompatActivity {
                     sectionsList.add(addAdAt, null);
                 }
                 addAdAt += 2;
-            }
+            }*/
             activityLibExpansionBinding.someMoreThingsRec.setAdapter(new SomeMoreThingsAdapter(this, sectionsList));
 
 
@@ -113,14 +129,15 @@ public class LibExpansionActivity extends AppCompatActivity {
         initLinkRec();
 
         //Demo Img
-        loadDemoImg();
+        if (!Objects.requireNonNull(map.get("5")).toString().equals(""))
+            loadDemoImg();
     }
 
     private void loadDemoImg() {
         /*map.get("5") contains Demo img url*/
         Glide.with(this)
                 .load(Objects.requireNonNull(map.get("5")).toString())
-                //.placeholder(getResources().getDrawable(R.drawable.loading_gif))
+                .placeholder(getResources().getDrawable(R.drawable.placeholder_image2))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -185,6 +202,177 @@ public class LibExpansionActivity extends AppCompatActivity {
             linkAdapter.whichButton(balloon, 1, map);
         });
 
+
+    }
+
+    private void fetchAd(String randomAdUrl) {
+        AdLoader.Builder builder = new AdLoader.Builder(this, Constants.TEST_AD);
+
+        builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+            // OnUnifiedNativeAdLoadedListener implementation.
+            @Override
+            public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                // If this callback occurs after the activity is destroyed, you must call
+                // destroy and return or you may get a memory leak.
+                if (isDestroyed()) {
+                    unifiedNativeAd.destroy();
+                    return;
+                }
+                // You must call destroy on old ads when you are done with them,
+                // otherwise you will have a memory leak.
+                if (nativeAd != null) {
+                    nativeAd.destroy();
+                }
+                nativeAd = unifiedNativeAd;
+                FrameLayout frameLayout =
+                        findViewById(R.id.fl_adplaceholder);
+                UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater()
+                        .inflate(R.layout.ad_unified, null);
+                populateUnifiedNativeAdView(unifiedNativeAd, adView);
+                frameLayout.removeAllViews();
+                frameLayout.addView(adView);
+            }
+
+        });
+
+        VideoOptions videoOptions = new VideoOptions.Builder()
+                .setStartMuted(true)
+                .build();
+
+        NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                .setVideoOptions(videoOptions)
+                .build();
+
+        builder.withNativeAdOptions(adOptions);
+
+        AdLoader adLoader =
+                builder
+                        .withAdListener(new AdListener() {
+                                            @Override
+                                            public void onAdFailedToLoad(int i) {
+                                                super.onAdFailedToLoad(i);
+                                                Timber.d("Ad Load Failed");
+                                            }
+                                        }
+                        )
+                        .build();
+
+        adLoader.loadAd(new AdRequest.Builder().setContentUrl(randomAdUrl).build());
+    }
+
+    private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
+        // Set the media view.
+        adView.setMediaView((MediaView) adView.findViewById(R.id.ad_media));
+
+        // Set other ad assets.
+        adView.setHeadlineView(adView.findViewById(R.id.ad_headline));
+        adView.setBodyView(adView.findViewById(R.id.ad_body));
+        adView.setCallToActionView(adView.findViewById(R.id.ad_call_to_action));
+        adView.setIconView(adView.findViewById(R.id.ad_app_icon));
+        adView.setPriceView(adView.findViewById(R.id.ad_price));
+        adView.setStarRatingView(adView.findViewById(R.id.ad_stars));
+        adView.setStoreView(adView.findViewById(R.id.ad_store));
+        adView.setAdvertiserView(adView.findViewById(R.id.ad_advertiser));
+
+        // The headline and mediaContent are guaranteed to be in every UnifiedNativeAd.
+        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
+        adView.getMediaView().setMediaContent(nativeAd.getMediaContent());
+
+        // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
+        // check before trying to display them.
+        if (nativeAd.getBody() == null) {
+            adView.getBodyView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getBodyView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getBodyView()).setText(nativeAd.getBody());
+        }
+
+        if (nativeAd.getCallToAction() == null) {
+            adView.getCallToActionView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getCallToActionView().setVisibility(View.VISIBLE);
+            ((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction());
+        }
+
+        if (nativeAd.getIcon() == null) {
+            adView.getIconView().setVisibility(View.GONE);
+        } else {
+            ((ImageView) adView.getIconView()).setImageDrawable(
+                    nativeAd.getIcon().getDrawable());
+            adView.getIconView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getPrice() == null) {
+            adView.getPriceView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getPriceView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getPriceView()).setText(nativeAd.getPrice());
+        }
+
+        if (nativeAd.getStore() == null) {
+            adView.getStoreView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getStoreView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getStoreView()).setText(nativeAd.getStore());
+        }
+
+        if (nativeAd.getStarRating() == null) {
+            adView.getStarRatingView().setVisibility(View.INVISIBLE);
+        } else {
+            ((RatingBar) adView.getStarRatingView())
+                    .setRating(nativeAd.getStarRating().floatValue());
+            adView.getStarRatingView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getAdvertiser() == null) {
+            adView.getAdvertiserView().setVisibility(View.INVISIBLE);
+        } else {
+            ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
+            adView.getAdvertiserView().setVisibility(View.VISIBLE);
+        }
+
+        // This method tells the Google Mobile Ads SDK that you have finished populating your
+        // native ad view with this native ad.
+        adView.setNativeAd(nativeAd);
+
+        // Get the video controller for the ad. One will always be provided, even if the ad doesn't
+        // have a video asset.
+        VideoController vc = nativeAd.getVideoController();
+
+        // Updates the UI to say whether or not this ad has a video asset.
+        if (vc.hasVideoContent()) {
+           /* videoStatus.setText(String.format(Locale.getDefault(),
+                    "Video status: Ad contains a %.2f:1 video asset.",
+                    vc.getAspectRatio()));*/
+            Timber.d("Video status: Ad contains a %.2f:1 video asset.", vc.getPlaybackState());
+
+            // Create a new VideoLifecycleCallbacks object and pass it to the VideoController. The
+            // VideoController will call methods on this object when events occur in the video
+            // lifecycle.
+            vc.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
+                @Override
+                public void onVideoEnd() {
+                    // Publishers should allow native ads to complete video playback before
+                    // refreshing or replacing them with another ad in the same UI location.
+                    //refresh.setEnabled(true);
+                    //videoStatus.setText("Video status: Video playback has ended.");
+                    Timber.d("Video status: Video playback has ended.");
+                    super.onVideoEnd();
+                }
+            });
+        } else {
+            //videoStatus.setText("Video status: Ad does not contain a video asset.");
+            //refresh.setEnabled(true);
+            Timber.d("Video status: Ad does not contain a video asset.");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (nativeAd != null) {
+            nativeAd.destroy();
+        }
+        super.onDestroy();
 
     }
 

@@ -15,13 +15,16 @@ import com.yog.androidarena.activity.OpenInWebviewActivity
 import com.yog.androidarena.databinding.ArticlesRecBinding
 import com.yog.androidarena.databinding.NativeRecAdviewBinding
 import com.yog.androidarena.model.ArticleModel
+import com.yog.androidarena.ui.articles.ArticlesFragment
 import com.yog.androidarena.util.Constants
 import com.yog.androidarena.util.General
 import timber.log.Timber
 import java.util.*
 
 class ArticlePagingAdapter
-         (private val context:Context,private val options:FirestorePagingOptions<ArticleModel>):FirestorePagingAdapter<ArticleModel,ArticlePagingAdapter.Holder>(options) {
+         (private val articlesFragment: ArticlesFragment,
+          private val context:Context,
+          private val options:FirestorePagingOptions<ArticleModel>):FirestorePagingAdapter<ArticleModel,ArticlePagingAdapter.Holder>(options) {
 
     private lateinit var articleRecBinding: ArticlesRecBinding
     private lateinit var nativeRecAdviewBinding: NativeRecAdviewBinding
@@ -58,16 +61,23 @@ class ArticlePagingAdapter
     }
 
     override fun getItemViewType(position: Int): Int{
-        if(position%5==0)
-            return AD_VIEW_TYPE
-        return position
+        return if(position == 0 || position%7!=0)
+            position;
+        else
+            AD_VIEW_TYPE
+
     }
 
     override fun onLoadingStateChanged(state: LoadingState) {
          when(state)
          {
-             LoadingState.LOADING_INITIAL->Timber.tag("ar_frag").d("loadiNG initail")
-             LoadingState.FINISHED->Timber.tag("ar_frag").d("loading fAIL")
+             LoadingState.LOADING_INITIAL->Timber.tag("ar_frag").d("loadiNG initial")
+             LoadingState.FINISHED->
+             {
+                 Timber.tag("ar_frag").d("loading finished")
+                 articlesFragment.hideShimmer()
+
+             }
              LoadingState.ERROR->Timber.tag("ar_frag").d("loading error")
              else->Timber.tag("ar_frag").d("else")
          }

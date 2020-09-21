@@ -2,8 +2,6 @@ package com.yog.androidarena.util;
 
 import android.app.Application;
 
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.yog.androidarena.BuildConfig;
 
 import timber.log.Timber;
@@ -16,11 +14,11 @@ public class MainApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
-        new Instabug.Builder(this, "f30e8db626e761f6e612486e4acf0ce4")
+       /* new Instabug.Builder(this, "f30e8db626e761f6e612486e4acf0ce4")
                 .setInvocationEvents(
                         InstabugInvocationEvent.SHAKE,
                         InstabugInvocationEvent.FLOATING_BUTTON)
-                .build();
+                .build();*/
 
     }
 

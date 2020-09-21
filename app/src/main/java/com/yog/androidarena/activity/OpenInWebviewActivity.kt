@@ -1,5 +1,6 @@
 package com.yog.androidarena.activity
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -23,11 +24,14 @@ class OpenInWebviewActivity : AppCompatActivity() {
 
     private lateinit var activityOpenInWebviewBinding: ActivityOpenInWebviewBinding
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityOpenInWebviewBinding = DataBindingUtil.setContentView(this, R.layout.activity_open_in_webview)
-        //setting webview client
+        //setting webview client (To open any link in webview only not in browser)
         activityOpenInWebviewBinding.webView.webViewClient = MyWebviewClient()
+        //Enable JavaScript
+        activityOpenInWebviewBinding.webView.settings.javaScriptEnabled = true
 
         //load url
         activityOpenInWebviewBinding.webView.loadUrl(intent.getStringExtra(Constants.LINK))

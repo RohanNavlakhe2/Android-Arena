@@ -35,7 +35,7 @@ public object General {
 
     fun settingFirebaseCacheToFalse(db: FirebaseFirestore) {
         val settings = FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(false)
+                .setPersistenceEnabled(true)
                 .build()
         db.firestoreSettings = settings
     }
@@ -71,10 +71,11 @@ public object General {
     fun loadNativeTemplateAd(context: Context,templateView: TemplateView, contentUrl: String) {
         val adLoader = AdLoader.Builder(context, Constants.TEST_AD)
                 .forUnifiedNativeAd { unifiedNativeAd ->
-                    val styles = NativeTemplateStyle.Builder().withMainBackgroundColor(ColorDrawable(context.resources.getColor(R.color.transperent))).build()
-                    val template = templateView
-                    template.setStyles(styles)
-                    template.setNativeAd(unifiedNativeAd)
+                    val styles = NativeTemplateStyle.Builder()
+                            .withMainBackgroundColor(
+                                    ColorDrawable(context.resources.getColor(R.color.transperent))).build()
+                    templateView.setStyles(styles)
+                    templateView.setNativeAd(unifiedNativeAd)
                 }
                 .build()
         val adRequest = AdRequest.Builder().setContentUrl(contentUrl).build()

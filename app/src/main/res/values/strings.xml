@@ -26,4 +26,7 @@
     <string name="not_now">Not Now</string>
     <string name="send_mail_or_not">To get the link on your Mail-Id you must Sign in First</string>
     <string name="ok">Ok</string>
+
+    <string name="ad_attribution">Ad</string>
+
 </resources>

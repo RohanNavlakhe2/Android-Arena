@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.ads.nativetemplates.TemplateView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,11 +39,11 @@ public class LibsFragment extends Fragment {
     private FragmentLibsBinding fragmentLibsBinding;
     private Context context;
     //Firebase
-    String TAG = "firebase result";
     private FirebaseFirestore db;
     private List<LibList> sortedAllLibsNameAndDescList = new ArrayList<>();
     private LibListComparator libListComparator;
     private List<Map> mapList;
+    private List<Object> allLibAndAdList;
     private int noOfTimesSortMethodShouldBeCalled;
 
     @Override
@@ -55,26 +56,62 @@ public class LibsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        fragmentLibsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_libs, container, false);
-        //setting title
-        ((MainActivity) context).setTitleAccordingToFragment(1);
-        Timber.d("hide shimmer");
-        showShimmer();
-        //getting LibList (Name and short description)
-        getLibListFromCloud();
+        fragmentLibsBinding = DataBindingUtil.
+                inflate(LayoutInflater.from(context), R.layout.fragment_libs, container, false);
         return fragmentLibsBinding.getRoot();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //setting title
+        ((MainActivity) context).setTitleAccordingToFragment(1);
+        Timber.d("show shimmer");
+        showShimmer();
+        //getting LibList (Name and short description)
+        getLibListFromCloud();
 
-    private void initLibRec(List<LibList> sortedLibList, List<DocumentSnapshot> sortedDocumentSnapshotList) {
-        int addNullAtForAd = 5;
-        while (addNullAtForAd < sortedLibList.size()) {
-            sortedLibList.add(addNullAtForAd, null);
-            sortedDocumentSnapshotList.add(addNullAtForAd, null);
-            addNullAtForAd += 5;
+    }
+
+    private void addAdsToList(List<LibList> allThingsList, List<DocumentSnapshot> documentSnapshotList)
+    {
+        TemplateView templateView;
+        allLibAndAdList =  new ArrayList<>(allThingsList);
+        int addAdAfterEvery = 7;
+
+        for(int i=7; i<allLibAndAdList.size(); i+=addAdAfterEvery)
+        {
+
+            if(isAdded()) {
+                Timber.d("Fragment added");
+                templateView = getLayoutInflater().inflate(R.layout.native_rec_adview, null)
+                        .findViewById(R.id.smallNativeTemplate);
+                allLibAndAdList.add(i, templateView);
+                documentSnapshotList.add(i, null);
+            }else
+                Timber.d("Fragment not added");
         }
+
+        loadAds(allLibAndAdList,documentSnapshotList);
+
+    }
+
+    private void loadAds(List<Object> allLibAndAdList,List<DocumentSnapshot> documentSnapshotList)
+    {
+        ((MainActivity)context).loadAd(7,allLibAndAdList);
+        initLibRec(allLibAndAdList,documentSnapshotList);
+    }
+
+
+    private void initLibRec(List<Object> libAndAdList, List<DocumentSnapshot> sortedDocumentSnapshotList) {
+       /* int addNullAtForAd = 7;
+        while (addNullAtForAd < libAndAdList.size()) {
+            libAndAdList.add(addNullAtForAd, null);
+            sortedDocumentSnapshotList.add(addNullAtForAd, null);
+            addNullAtForAd += 7;
+        }*/
         fragmentLibsBinding.libRec.setLayoutManager(new LinearLayoutManager(context));
-        fragmentLibsBinding.libRec.setAdapter(new LibAdapter(context, sortedLibList, sortedDocumentSnapshotList));
+        fragmentLibsBinding.libRec.setAdapter(new LibAdapter(context, libAndAdList, sortedDocumentSnapshotList));
         hideShimmer();
     }
 
@@ -92,16 +129,18 @@ public class LibsFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             Timber.i("task success");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            if(task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                HashMap<String, Object> map = (HashMap<String, Object>) document.getData();
-                                //getting List of Map
-                                mapList = (List<Map>) map.get("0");
-                                //Each Map contains data for each Library name and description
+                                    HashMap<String, Object> map = (HashMap<String, Object>) document.getData();
+                                    //getting List of Map
+                                    mapList = (List<Map>) map.get("0");
+                                    //Each Map contains data for each Library name and description
 
-                                //Getting Lib complete Detail
-                                getLibDataFromCloud();
+                                    //Getting Lib complete Detail
+                                    getLibDataFromCloud();
 
+                                }
                             }
                         } else {
                             Timber.i(task.getException(), "task fail");
@@ -166,7 +205,7 @@ public class LibsFragment extends Fragment {
         //This method sorts LibList class objects list based
         //on the libName of each LibList object.
 
-        //making temp list so that main list should be affected by the sublist method.
+        //making temp list so that main list should not be affected by the sublist method.
         List<LibList> tempAllLibsNameAndDescList = new ArrayList<>(allLibsNameAndDescList);
         //sorting first 22 objects (second parameter of subList() considers -1 means it will 22 as 21).
         List<LibList> sortedLibList = sortListBasedOnLibName(tempAllLibsNameAndDescList.subList(0, 22));
@@ -187,12 +226,8 @@ public class LibsFragment extends Fragment {
          */
 
 
-        //Putting data(libName and short desc) on the ui
-        initLibRec(listTobeDisplayOnTheScreen, documentSnapshotList);
-        /*for (DocumentSnapshot documentSnapshot : documentSnapshotList) {
-            //documentSnapshot.getData().get("0");
-            //Timber.i(Objects.requireNonNull(Objects.requireNonNull(documentSnapshot.getData()).get("0")).toString());
-        }*/
+        addAdsToList(listTobeDisplayOnTheScreen,documentSnapshotList);
+
     }
 
     private List<LibList> sortListBasedOnLibName(List<LibList> allLibsNameAndDescList) {
@@ -264,6 +299,16 @@ public class LibsFragment extends Fragment {
         Timber.d("hide shimmer");
         fragmentLibsBinding.shimmer.stopShimmer();
         fragmentLibsBinding.shimmer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroy() {
+       /* for(Object item:allLibAndAdList)
+        {
+            if(item instanceof TemplateView)
+                ((TemplateView)item).getNativeAdView().destroy();
+        }*/
+        super.onDestroy();
     }
 
     private static class LibListComparator implements Comparator<LibList> {

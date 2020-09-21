@@ -23,7 +23,7 @@ import java.util.Random;
 
 import timber.log.Timber;
 
-public class SomeMoreThingsAdapter extends RecyclerView.Adapter {
+public class SomeMoreThingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private NoTxtRecviewBinding noTxtRecviewBinding;
     private SomeMorethingsRecBinding someMorethingsRecBinding;
@@ -74,7 +74,7 @@ public class SomeMoreThingsAdapter extends RecyclerView.Adapter {
             someMorethingsRecBinding.subPointsRec.setLayoutManager(new LinearLayoutManager(context));
             /*someMoreThingsMap.get("1") contains List respective to title*/
             //someMorethingsRecBinding.subPointsRec.setAdapter(new PointAdapter(context, (List<String>) someMoreThingsMap.get("1")));
-            someMorethingsRecBinding.subPointsRec.setAdapter(new Point_SnippetAdapter(context, (List) someMoreThingsMap.get("1")));
+            someMorethingsRecBinding.subPointsRec.setAdapter(new PointSnippetAdapter(context, (List) someMoreThingsMap.get("1")));
         }
 
     }

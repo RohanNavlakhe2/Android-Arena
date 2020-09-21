@@ -49,8 +49,8 @@
                          android:layout_marginTop="@dimen/dp8"
                          android:layout_marginBottom="@dimen/dp8"/>
                      <!--Ad-->
-                     <include layout="@layout/native_rec_adview"
-                         android:id="@+id/includeNativeSmallAd"/>
+                     <!--<include layout="@layout/native_rec_adview"
+                         android:id="@+id/includeNativeSmallAd"/>-->
                      <!--//Ad-->
                      <!--Some more things section-->
                     <androidx.recyclerview.widget.RecyclerView
@@ -73,13 +73,22 @@
                  <androidx.recyclerview.widget.RecyclerView
                      android:id="@+id/linkRec"
                      android:layout_width="match_parent"
-                     android:layout_height="wrap_content"/>
-                 <!--Ad-->
-                <!-- <include android:layout_width="match_parent"
                      android:layout_height="wrap_content"
-                     layout="@layout/native_rec_adview"
-                     android:id="@+id/includeNativeSmallAd3"
+                    />
+                 <!--Ad-->
+                 <!--<com.google.android.ads.nativetemplates.TemplateView
+                     android:id="@+id/medium_ad_at_expansion"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     app:gnt_template_type="@layout/gnt_medium_template_view"
                      />-->
+                 <FrameLayout
+                     android:id="@+id/fl_adplaceholder"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="@dimen/dp20"
+                     android:layout_marginBottom="@dimen/dp10"
+                     />
                  <!--//Ad-->
              </LinearLayout>
     </androidx.core.widget.NestedScrollView>

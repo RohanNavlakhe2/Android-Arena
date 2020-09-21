@@ -16,7 +16,6 @@
         android:background="@drawable/gnt_outline_shape"
         >
       <androidx.constraintlayout.widget.ConstraintLayout
-
           android:layout_width="@dimen/gnt_no_size"
           android:layout_height="@dimen/gnt_no_size"
           android:layout_marginEnd="@dimen/gnt_default_margin"
@@ -89,8 +88,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                ></TextView>
+                app:layout_constraintTop_toTopOf="parent" />
           </LinearLayout>
           <LinearLayout
               android:id="@+id/row_two"
@@ -119,8 +117,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                >
-            </TextView>
+                android:layout_marginLeft="@dimen/gnt_no_margin"
+                android:layout_marginRight="@dimen/gnt_default_margin"/>
+
             <RatingBar
                 android:id="@+id/rating_bar"
                 android:background="@color/gnt_white"
@@ -137,9 +136,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ad_notification_view"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"/>
 
-            </RatingBar>
+
             <TextView
                 android:id="@+id/secondary"
                 android:background="@color/gnt_white"
@@ -156,8 +155,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ad_notification_view"
-                app:layout_constraintTop_toTopOf="parent"
-                ></TextView>
+                app:layout_constraintTop_toTopOf="parent" />
 
           </LinearLayout>
           <Button

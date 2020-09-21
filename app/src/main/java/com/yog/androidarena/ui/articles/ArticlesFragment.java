@@ -25,7 +25,7 @@ import timber.log.Timber;
 
 public class ArticlesFragment extends Fragment {
 
-    private FragmentArticlesBinding fragmentArticlesBinding;
+    private  FragmentArticlesBinding fragmentArticlesBinding;
     private Context context;
 
     @Override
@@ -37,7 +37,13 @@ public class ArticlesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        fragmentArticlesBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.fragment_articles, container, false);
+        fragmentArticlesBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_articles,container,false);
+        return fragmentArticlesBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         Timber.tag("ar_frag").d("on create view");
         //setting title
         ((MainActivity) context).setTitleAccordingToFragment(2);
@@ -45,17 +51,17 @@ public class ArticlesFragment extends Fragment {
         showShimmer();
         //load
         loadDataFromCloud();
-        return fragmentArticlesBinding.getRoot();
     }
 
     private void showShimmer()
     {
         Timber.d("show shimmer");
-        fragmentArticlesBinding.shimmer.setVisibility(View.VISIBLE);
         fragmentArticlesBinding.shimmer.startShimmer();
+        fragmentArticlesBinding.shimmer.setVisibility(View.VISIBLE);
+
     }
 
-    private void hideShimmer()
+    public void hideShimmer()
     {
         Timber.d("hide shimmer");
         fragmentArticlesBinding.shimmer.stopShimmer();
@@ -65,7 +71,10 @@ public class ArticlesFragment extends Fragment {
 
     private void loadDataFromCloud() {
         Query query = ((MainActivity)context).getDb()
-                .collection("Articles").orderBy("no", Query.Direction.DESCENDING);
+                .collection("Articles")
+                .orderBy("no", Query.Direction.DESCENDING);
+
+
 
         // This configuration comes from the Paging Support Library
         PagedList.Config config = new PagedList.Config.Builder()
@@ -81,11 +90,11 @@ public class ArticlesFragment extends Fragment {
 
 
         //init rec
-        ArticlePagingAdapter articlePagingAdapter = new ArticlePagingAdapter(context, options);
+        ArticlePagingAdapter articlePagingAdapter = new ArticlePagingAdapter(this,context, options);
         fragmentArticlesBinding.articleRec.setLayoutManager(new LinearLayoutManager(context));
         fragmentArticlesBinding.articleRec.setAdapter(articlePagingAdapter);
-        //hide shimmer
-        hideShimmer();
+
+
     }
 
 

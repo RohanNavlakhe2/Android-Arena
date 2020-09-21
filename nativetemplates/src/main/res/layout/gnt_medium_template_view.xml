@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
   <com.google.android.gms.ads.formats.UnifiedNativeAdView
-      android:layout_height="350dp"
+      android:layout_height="wrap_content"
       android:layout_width="match_parent"
       android:id="@+id/native_ad_view"
       android:background="@drawable/gnt_outline_shape"
@@ -43,7 +43,6 @@
         android:id="@+id/middle"
         >
       <androidx.constraintlayout.widget.ConstraintLayout
-
           android:layout_width="@dimen/gnt_no_size"
           android:layout_height="@dimen/gnt_no_size"
           app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +66,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/content"
-            />
+            android:layout_marginLeft="@dimen/gnt_default_margin"
+            android:layout_marginRight="@dimen/gnt_no_margin" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/gnt_no_size"
             android:layout_height="@dimen/gnt_no_size"
@@ -108,7 +108,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                ></TextView>
+                />
           </LinearLayout>
           <LinearLayout
               android:id="@+id/row_two"
@@ -137,7 +137,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                >
+                android:layout_marginLeft="@dimen/gnt_no_margin"
+                android:layout_marginRight="@dimen/gnt_default_margin">
             </TextView>
             <RatingBar
                 android:id="@+id/rating_bar"
