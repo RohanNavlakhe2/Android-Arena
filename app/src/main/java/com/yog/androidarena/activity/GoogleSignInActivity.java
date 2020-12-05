@@ -74,7 +74,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
-            } else if (General.INSTANCE.getBooleanSp(this)) {
+            } else if (General.INSTANCE.getBooleanSp(Constants.NOT_NOW,this)) {
                 //means user has pressed not now btn
                 onBackPressed();
             }
@@ -88,7 +88,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
             startActivity(intent);
             finish();
 
-        } else if (General.INSTANCE.getBooleanSp(this)) {
+        } else if (General.INSTANCE.getBooleanSp(Constants.NOT_NOW,this)) {
             //means user has presssed not now button
             intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -278,7 +278,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
                 signIn();
                 break;
             case R.id.notNowBtn:
-                General.INSTANCE.createBooleanSP(true, this);
+                General.INSTANCE.createBooleanSP(Constants.NOT_NOW,true, this);
                 updateUI(null);
                 break;
         }

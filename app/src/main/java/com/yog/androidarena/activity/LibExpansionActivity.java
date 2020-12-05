@@ -81,7 +81,10 @@ public class LibExpansionActivity extends AppCompatActivity {
         if (map != null) {
             introAndSectionsList = (List) map.get("1");
             //setting Toolbar Title
-            String libraryName = Objects.requireNonNull(map.get("0")).toString();
+
+            String libraryName = "";
+            if(map.get("0") != null)
+               libraryName = map.get("0").toString();
             activityLibExpansionBinding.includeToolbar.libNameTitle.setText(libraryName);
         }
 

@@ -32,13 +32,14 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         if (!task.isSuccessful()) {
-                            Timber.tag("getInstanceId failed").w(task.getException());
+                            Timber.d(task.getException(), "Task is not successful in onNewToken Method");
                             return;
                         }
 
                         // Get new Instance ID token
+                        Timber.d("Task Successful in onNewToken");
                         String token = Objects.requireNonNull(task.getResult()).getToken();
-                        Timber.e(token);
+                        Timber.d("Token :%s",token);
                     }
                 });
 
@@ -48,6 +49,7 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        Timber.d("On Message Received");
 
         Map<String, String> data = remoteMessage.getData();
         String body = data.get("body");

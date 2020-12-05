@@ -1,10 +1,15 @@
 package com.yog.androidarena.activity;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         loadADType();
 
         //Firebase Catch
-        General.INSTANCE.settingFirebaseCacheToFalse(db);
+        General.INSTANCE.settingFirebaseCache(db);
 
 
         //Control Navigation Destination change
@@ -277,6 +282,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Timber.d("Back Pressed");
+        int ratingCount = General.INSTANCE.getIntSp(this,Constants.RATE_COUNT);
+        General.INSTANCE.createIntSP(this,Constants.RATE_COUNT,ratingCount+1);
+        if(ratingCount %5 == 0)
+        {
+            //show rating box
+            Timber.d("Show Rating Box");
+            showRatingBox();
+        }
         if (fragmentOrder.get(fragmentOrder.size() - 1) != 0) {
             Timber.d("if - Back Pressed");
             //Means Current Fragment is not ThingsFragment (HomeFragment)
@@ -302,6 +315,42 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
 
+    }
+
+    private void showRatingBox()
+    {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + this.getPackageName())));
+        } catch (android.content.ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
+        }
+
+        General.INSTANCE.createBooleanSP(Constants.NOT_NOW,true,this);
+    }
+
+    private void showAlert(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Rate us")
+                .setMessage("Please Rate your experience with people")
+                .setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showRatingBox();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).setCancelable(false);
+
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }

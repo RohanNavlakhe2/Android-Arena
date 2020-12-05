@@ -52,8 +52,6 @@ dependencies {
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    //Picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
@@ -68,10 +66,7 @@ dependencies {
     // FirebaseUI for Cloud Firestore
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.1'
     implementation 'android.arch.paging:runtime:1.0.1'
-
-    //webview
-    implementation 'com.thefinestartist:finestwebview:1.2.7'
-
+    
     //Mobile Ads Sdk
     implementation 'com.google.android.gms:play-services-ads:19.1.0'
 

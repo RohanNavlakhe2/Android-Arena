@@ -192,7 +192,7 @@ public class LibsFragment extends Fragment {
         //Log.i("lib","Map List Size"+mapList.size());
         for (Map eachLibInformation : mapList) {
             //adding each lib name and short desc to model class
-            allLibsNameAndDescList.add(new LibList(eachLibInformation.get("0").toString(), eachLibInformation.get("1").toString()));
+            allLibsNameAndDescList.add(new LibList(eachLibInformation.get("0").toString(), eachLibInformation.get("1").toString(),0));
         }
 
 

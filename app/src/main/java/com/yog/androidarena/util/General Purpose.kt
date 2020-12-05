@@ -27,22 +27,16 @@ public object General {
         }
     }
 
-    /*operator fun invoke(context: Context) {
-
-        this.context = context
-
-    }*/
-
-    fun settingFirebaseCacheToFalse(db: FirebaseFirestore) {
+    fun settingFirebaseCache(db: FirebaseFirestore) {
         val settings = FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
                 .build()
         db.firestoreSettings = settings
     }
 
-    fun createBooleanSP(boolean: Boolean, context: Context) {
+    fun createBooleanSP(key:String,booleanValue: Boolean, context: Context) {
         init(context)
-        editor.putBoolean(Constants.NOT_NOW, boolean)
+        editor.putBoolean(key, booleanValue)
         editor.apply()
     }
 
@@ -57,9 +51,20 @@ public object General {
         return sharedPreferences.getString(key, null)
     }
 
-    fun getBooleanSp(context: Context): Boolean {
+    fun createIntSP(context: Context, key: String, value: Int) {
         init(context)
-        return sharedPreferences.getBoolean(Constants.NOT_NOW, false)
+        editor.putInt(key, value)
+        editor.apply()
+    }
+
+    fun getIntSp(context: Context, key: String): Int {
+        init(context)
+        return sharedPreferences.getInt(key, -1)
+    }
+
+    fun getBooleanSp(key:String,context: Context): Boolean {
+        init(context)
+        return sharedPreferences.getBoolean(key,false)
     }
 
     fun deleteBooleanSP(context: Context) {
