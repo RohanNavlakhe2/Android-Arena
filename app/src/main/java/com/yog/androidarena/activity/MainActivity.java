@@ -170,13 +170,13 @@ public class MainActivity extends AppCompatActivity {
         if (index >= libAndAdList.size())
             return;
         TemplateView templateView = null;
-        if(libAndAdList.get(index) instanceof TemplateView)
-          templateView = (TemplateView) libAndAdList.get(index);
+        if (libAndAdList.get(index) instanceof TemplateView)
+            templateView = (TemplateView) libAndAdList.get(index);
         int addAdAtEvery = 7;
 
         TemplateView finalTemplateView = templateView;
 
-        AdLoader adLoader = new AdLoader.Builder(this, Constants.TEST_AD)
+        AdLoader adLoader = new AdLoader.Builder(this, Constants.NATIVE_AD_TEST_ID)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                                         getResources().getColor(R.color.transperent)
                                 )).build();
 
-                        if(finalTemplateView != null) {
+                        if (finalTemplateView != null) {
                             finalTemplateView.setStyles(styles);
                             finalTemplateView.setNativeAd(unifiedNativeAd);
                         }
@@ -204,14 +204,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onAdLoaded() {
                         super.onAdLoaded();
                         Timber.d("Ad Loaded");
-                        loadAd(index+addAdAtEvery,libAndAdList);
+                        loadAd(index + addAdAtEvery, libAndAdList);
                     }
 
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
                         Timber.d("Ad Failed to Load: %s", i);
-                        loadAd(index+addAdAtEvery,libAndAdList);
+                        loadAd(index + addAdAtEvery, libAndAdList);
                     }
                 }).build();
 
@@ -282,14 +282,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Timber.d("Back Pressed");
-        int ratingCount = General.INSTANCE.getIntSp(this,Constants.RATE_COUNT);
-        General.INSTANCE.createIntSP(this,Constants.RATE_COUNT,ratingCount+1);
-        if(ratingCount %5 == 0)
-        {
-            //show rating box
-            Timber.d("Show Rating Box");
-            showRatingBox();
-        }
         if (fragmentOrder.get(fragmentOrder.size() - 1) != 0) {
             Timber.d("if - Back Pressed");
             //Means Current Fragment is not ThingsFragment (HomeFragment)
@@ -312,13 +304,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //Means Current fragment is HomeFragment so exit the activity
             Timber.d("else - Back Pressed");
-            super.onBackPressed();
+            ratingBoxLogic();
+
         }
 
     }
 
-    private void showRatingBox()
-    {
+    private void sendToPlaystoreForRating() {
         try {
             startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("market://details?id=" + this.getPackageName())));
@@ -327,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
                     Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
         }
 
-        General.INSTANCE.createBooleanSP(Constants.NOT_NOW,true,this);
+        General.INSTANCE.createBooleanSP(Constants.RATED, true, this);
     }
 
     private void showAlert(Context context) {
@@ -337,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Rate", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showRatingBox();
+                        sendToPlaystoreForRating();
                         dialog.dismiss();
                     }
                 })
@@ -351,6 +343,19 @@ public class MainActivity extends AppCompatActivity {
         //Creating dialog box
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void ratingBoxLogic()
+    {
+        int ratingCount = General.INSTANCE.getIntSp(this, Constants.RATE_COUNT);
+        General.INSTANCE.createIntSP(this, Constants.RATE_COUNT, ++ratingCount);
+        boolean rated = General.INSTANCE.getBooleanSp(Constants.RATED,this);
+        if (ratingCount % 5 == 0 && !rated) {
+            //show rating box
+            Timber.d("Show Rating Box");
+            showAlert(this);
+        }else
+            super.onBackPressed();
     }
 
 }

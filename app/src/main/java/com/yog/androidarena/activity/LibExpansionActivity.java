@@ -209,7 +209,7 @@ public class LibExpansionActivity extends AppCompatActivity {
     }
 
     private void fetchAd(String randomAdUrl) {
-        AdLoader.Builder builder = new AdLoader.Builder(this, Constants.TEST_AD);
+        AdLoader.Builder builder = new AdLoader.Builder(this, Constants.NATIVE_AD_TEST_ID);
 
         builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
             // OnUnifiedNativeAdLoadedListener implementation.

@@ -3,6 +3,9 @@ package com.yog.androidarena.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import com.google.android.ads.nativetemplates.NativeTemplateStyle
 import com.google.android.ads.nativetemplates.TemplateView
 import com.google.android.gms.ads.AdLoader
@@ -67,14 +70,14 @@ public object General {
         return sharedPreferences.getBoolean(key,false)
     }
 
-    fun deleteBooleanSP(context: Context) {
+    fun deleteSP(key: String, context: Context) {
         init(context)
-        editor.remove(Constants.NOT_NOW)
+        editor.remove(key)
         editor.apply()
     }
 
     fun loadNativeTemplateAd(context: Context,templateView: TemplateView, contentUrl: String) {
-        val adLoader = AdLoader.Builder(context, Constants.TEST_AD)
+        val adLoader = AdLoader.Builder(context, Constants.NATIVE_AD_TEST_ID)
                 .forUnifiedNativeAd { unifiedNativeAd ->
                     val styles = NativeTemplateStyle.Builder()
                             .withMainBackgroundColor(
@@ -86,6 +89,33 @@ public object General {
         val adRequest = AdRequest.Builder().setContentUrl(contentUrl).build()
         adLoader.loadAd(adRequest)
         Timber.tag("ad_url").d(contentUrl)
+    }
+
+    private fun hasInternetConnection(context: Context): Boolean {
+        val connectivityManager = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        /*val connectivityManager = context.getApplication<MainApplication>().getSystemService(
+                Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager*/
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val activeNetwork = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+            return when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                return when(type) {
+                    ConnectivityManager.TYPE_WIFI -> true
+                    ConnectivityManager.TYPE_MOBILE -> true
+                    ConnectivityManager.TYPE_ETHERNET -> true
+                    else -> false
+                }
+            }
+        }
+        return false
     }
 
 

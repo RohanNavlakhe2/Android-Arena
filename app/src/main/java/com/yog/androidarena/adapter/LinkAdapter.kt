@@ -97,7 +97,7 @@ class LinkAdapter
             1 -> {
                 Timber.d(map["0"].toString())
                 balloon.dismiss()
-                General.deleteBooleanSP(context)
+                General.deleteSP(Constants.NOT_NOW,context)
                 context.startActivity(Intent(context, GoogleSignInActivity::class.java).apply {
                     putExtra(Constants.MAP, map as Serializable)
                 })

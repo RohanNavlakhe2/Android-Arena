@@ -44,7 +44,7 @@ class OpenInWebviewActivity : AppCompatActivity() {
     }
 
     private fun loadBannerAd() {
-        MobileAds.initialize(this) {}
+        //MobileAds.initialize(this) {}
         val randomAdUrl = Random().nextInt(Constants.AD_TYPES.size)
         val adRequest = AdRequest.Builder().setContentUrl(Constants.AD_TYPES[randomAdUrl]).build()
         activityOpenInWebviewBinding.adView.loadAd(adRequest)
