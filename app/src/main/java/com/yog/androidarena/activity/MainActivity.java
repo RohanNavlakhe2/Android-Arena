@@ -38,6 +38,7 @@ import com.yog.androidarena.R;
 import com.yog.androidarena.databinding.ActivityMainBinding;
 import com.yog.androidarena.util.Constants;
 import com.yog.androidarena.util.General;
+import com.yog.androidarena.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,26 +139,29 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void loadADType() {
-        db.collection("AdType")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Timber.i("task success");
-                            if (task.getResult() != null) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+        if(General.INSTANCE.hasInternetConnection(this)) {
+            db.collection("AdType")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Timber.i("task success");
+                                if (task.getResult() != null) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                    HashMap<String, Object> map = (HashMap<String, Object>) document.getData();
-                                    Constants.AD_TYPES = (List<String>) map.get("0");
+                                        HashMap<String, Object> map = (HashMap<String, Object>) document.getData();
+                                        Constants.AD_TYPES = (List<String>) map.get("0");
+                                    }
                                 }
-                            }
 
-                            for (String s : Constants.AD_TYPES)
-                                Timber.tag("ad_type").d(s);
+                                for (String s : Constants.AD_TYPES)
+                                    Timber.tag("ad_type").d(s);
+                            }
                         }
-                    }
-                });
+                    });
+        }else
+            Utils.showNoInternetBox(this);
     }
 
     public FirebaseFirestore getDb() {
@@ -337,6 +341,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        MainActivity.super.onBackPressed();
                     }
                 }).setCancelable(false);
 

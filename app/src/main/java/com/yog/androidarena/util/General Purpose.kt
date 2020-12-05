@@ -91,7 +91,7 @@ public object General {
         Timber.tag("ad_url").d(contentUrl)
     }
 
-    private fun hasInternetConnection(context: Context): Boolean {
+    fun hasInternetConnection(context: Context): Boolean {
         val connectivityManager = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         /*val connectivityManager = context.getApplication<MainApplication>().getSystemService(
                 Context.CONNECTIVITY_SERVICE
