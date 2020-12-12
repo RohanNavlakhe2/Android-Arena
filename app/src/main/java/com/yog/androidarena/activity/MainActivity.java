@@ -5,17 +5,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.ads.nativetemplates.NativeTemplateStyle;
@@ -61,19 +62,20 @@ public class MainActivity extends AppCompatActivity {
         Timber.tag(TAG).d("on create main activity TaskId:%s", this.getTaskId());
         super.onCreate(savedInstanceState);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
+        }
+
         db = FirebaseFirestore.getInstance();
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        //setSupportActionBar(activityMainBinding.includeToolbar.toolbar);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_libs, R.id.navigation_articles)
-                .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        //navView.setOnNavigationItemSelectedListener(this);
+
+
 
         //FCM
         fcmSubscribeToTopic();
@@ -88,8 +90,27 @@ public class MainActivity extends AppCompatActivity {
         //Control Navigation Destination change
         manageDestinationChange(navController);
 
+        manageIntent();
 
-        //loadAdType();
+    }
+
+    private void manageIntent()
+    {
+        //This activity is a "SingleInstance".So if the instance of this activity is already in the Task then
+        //on tap of the notification onNewIntent() will be called.
+
+        //And if we press back button then this activity will be destroyed means there will not be any instance
+        //of this activity in task then onCreate() will be called.
+
+        //So if this activity is not being opened by notification then tabString will be null.
+        //Otherwise with the intent that we passed in notification we will get the tab index to navigate.
+        String tabString = getIntent().getStringExtra(Constants.TAB_ON_NOTIFICATION);
+        if(tabString != null)
+        {
+            int tab = Integer.parseInt(tabString);
+            navigate(tab);
+            Timber.tag("TabNoti").d("Tab In onCreate: "+tab);
+        }
     }
 
 
@@ -180,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         TemplateView finalTemplateView = templateView;
 
-        AdLoader adLoader = new AdLoader.Builder(this, Constants.NATIVE_AD_TEST_ID)
+        AdLoader adLoader = new AdLoader.Builder(this, Constants.NATIVE_AD_PRODUCTION_ID)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
@@ -294,7 +315,8 @@ public class MainActivity extends AppCompatActivity {
             Timber.d("Fragment Order Size:" + fragmentOrder.size());
             //And set bottom navigation's item selected to the second last index means the last index
             //after removing the last object
-            switch (fragmentOrder.get(fragmentOrder.size() - 1)) {
+            navigate(fragmentOrder.get(fragmentOrder.size() - 1));
+           /* switch (fragmentOrder.get(fragmentOrder.size() - 1)) {
                 case 0:
                     activityMainBinding.navView.setSelectedItemId(R.id.navigation_home);
                     break;
@@ -304,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     activityMainBinding.navView.setSelectedItemId(R.id.navigation_articles);
                     break;
-            }
+            }*/
         } else {
             //Means Current fragment is HomeFragment so exit the activity
             Timber.d("else - Back Pressed");
@@ -312,6 +334,21 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void navigate(int tab)
+    {
+        switch (tab) {
+            case 0:
+                activityMainBinding.navView.setSelectedItemId(R.id.navigation_home);
+                break;
+            case 1:
+                activityMainBinding.navView.setSelectedItemId(R.id.navigation_libs);
+                break;
+            case 2:
+                activityMainBinding.navView.setSelectedItemId(R.id.navigation_articles);
+                break;
+        }
     }
 
     private void sendToPlaystoreForRating() {
@@ -363,4 +400,14 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Timber.tag("TabNoti").d("On New Intent");
+        int tab = Integer.parseInt(intent.getStringExtra(Constants.TAB_ON_NOTIFICATION));
+        Timber.tag("TabNoti").d("Tab In Main: "+tab);
+        navigate(tab);
+
+
+    }
 }

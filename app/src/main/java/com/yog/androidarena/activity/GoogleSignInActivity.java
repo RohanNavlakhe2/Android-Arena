@@ -1,10 +1,12 @@
 package com.yog.androidarena.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -17,6 +19,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.yog.androidarena.R;
+import com.yog.androidarena.databinding.ActivityGoogleSignInBinding;
 import com.yog.androidarena.util.Constants;
 import com.yog.androidarena.util.General;
 import com.yog.androidarena.util.Utils;
@@ -32,7 +35,11 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        com.yog.androidarena.databinding.ActivityGoogleSignInBinding activityGoogleSignInBinding = DataBindingUtil.setContentView(this, R.layout.activity_google_sign_in);
+        ActivityGoogleSignInBinding activityGoogleSignInBinding = DataBindingUtil.setContentView(this, R.layout.activity_google_sign_in);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
+        }
 
         activityGoogleSignInBinding.signInButton.setOnClickListener(this);
         activityGoogleSignInBinding.notNowBtn.setOnClickListener(this);

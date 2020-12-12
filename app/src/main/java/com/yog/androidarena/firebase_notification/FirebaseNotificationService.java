@@ -18,6 +18,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.yog.androidarena.R;
 import com.yog.androidarena.activity.MainActivity;
+import com.yog.androidarena.util.Constants;
 
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +26,8 @@ import java.util.Objects;
 import timber.log.Timber;
 
 public class FirebaseNotificationService extends FirebaseMessagingService {
+
+    //This string is a device token (This method is called whenver Firebase generates new Device Token)
     @Override
     public void onNewToken(@NonNull String s) {
         FirebaseInstanceId.getInstance().getInstanceId()
@@ -54,9 +57,21 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         String body = data.get("body");
         String title = data.get("title");
+        String tab = data.get("tab");
+        Timber.tag("TabNoti").d("Tab In Service: "+tab);
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 101, intent, 0);
+        intent.putExtra(Constants.TAB_ON_NOTIFICATION,tab);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Timber.tag("TabNoti").d("Tab In Service 2: "+intent.getStringExtra(Constants.TAB_ON_NOTIFICATION));
+
+        //Here PendingIntent.FLAG_UPDATE_CURRENT plays important role because previously when I had put 0 then
+        //it was not updating the data everytime when I was sending notification data (here tab) which I was passing
+        // in intent as extra.
+
+        //So PendingIntent.FLAG_UPDATE_CURRENT updates the extra.
+        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent,
+               PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager nm = (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
 
@@ -79,11 +94,12 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
                         getApplicationContext(), "222")
                         .setContentTitle(title)
                         .setAutoCancel(true)
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_logo)) //ic_launcher_background
+                        .setSmallIcon(R.drawable.app_logo)    //ic_launcher_foreground
                         //.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.electro))
                         .setContentText(body)
                         .setContentIntent(pi);
+
 
         builder.setPriority(NotificationCompat.PRIORITY_HIGH);
         assert nm != null;

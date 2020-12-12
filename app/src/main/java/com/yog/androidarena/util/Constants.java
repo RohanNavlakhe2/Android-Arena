@@ -19,6 +19,7 @@ public class Constants {
   public static final String CONTENT_URL="https://blog.mindorks.com/blogs/latest";
   public static final String  THINGS_EXPANSION = "ThingsYouShouldKnowExpansion";
   public static final String  THINGS_LIST = "ThingsList";
+  public static final String  TAB_ON_NOTIFICATION = "tab_on_noti";
 
   //By default putting one value to avoid exception in Random().nextInt()
   // (When AdTypes are not loaded from firebase)

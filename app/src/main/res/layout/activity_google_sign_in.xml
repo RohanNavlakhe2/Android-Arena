@@ -6,29 +6,30 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg4"
+        android:background="@drawable/ic_splash_bg"
         tools:context=".activity.GoogleSignInActivity">
+        <!-- android:background="@drawable/bg4"-->
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            app:layout_constraintBottom_toTopOf="@+id/notNowBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.823"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/notNowBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="39dp"
-            app:cardBackgroundColor="@color/colorPrimary"
+            android:layout_marginTop="30dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/dp5"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/sign_in_button"
             app:layout_constraintStart_toStartOf="@+id/sign_in_button"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/sign_in_button">
 
             <TextView
                 android:id="@+id/textView24"
@@ -37,7 +38,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:padding="@dimen/dp8"
                 android:text="@string/not_now"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,13 +59,16 @@
             android:orientation="horizontal">
         </LinearLayout>
 
-       <!-- <com.google.android.ads.nativetemplates.TemplateView
-            android:id="@+id/my_template"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:gnt_template_type="@layout/gnt_medium_template_view"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.67"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />-->
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/app_logo_trans" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

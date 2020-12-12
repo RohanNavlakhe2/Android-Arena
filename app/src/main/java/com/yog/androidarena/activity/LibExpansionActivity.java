@@ -2,6 +2,7 @@ package com.yog.androidarena.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +58,10 @@ public class LibExpansionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityLibExpansionBinding = DataBindingUtil.setContentView(this, R.layout.activity_lib_expansion);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
+        }
 
         //load ad (Which at the end of the page)
         int randomAdUrl = new Random().nextInt(Constants.AD_TYPES.size());
@@ -209,7 +214,7 @@ public class LibExpansionActivity extends AppCompatActivity {
     }
 
     private void fetchAd(String randomAdUrl) {
-        AdLoader.Builder builder = new AdLoader.Builder(this, Constants.NATIVE_AD_TEST_ID);
+        AdLoader.Builder builder = new AdLoader.Builder(this, Constants.NATIVE_AD_PRODUCTION_ID);
 
         builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
             // OnUnifiedNativeAdLoadedListener implementation.
