@@ -38,7 +38,7 @@ class OpenInWebviewActivity : AppCompatActivity() {
         activityOpenInWebviewBinding.webView.settings.javaScriptEnabled = true
 
         //load url
-        activityOpenInWebviewBinding.webView.loadUrl(intent.getStringExtra(Constants.LINK))
+        activityOpenInWebviewBinding.webView.loadUrl(intent.getStringExtra(Constants.LINK) ?: "")
 
         //Progress on loading
         progressOnLoading()
@@ -73,7 +73,7 @@ class OpenInWebviewActivity : AppCompatActivity() {
     private inner class MyWebviewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                view?.loadUrl(request?.url?.toString())
+                view?.loadUrl(request?.url?.toString() ?: "")
             }
             return false
         }

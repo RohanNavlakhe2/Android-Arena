@@ -15,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.yog.androidarena.R
 import timber.log.Timber
 
-public object General {
+object General {
     private lateinit var context: Context
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor

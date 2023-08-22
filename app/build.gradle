@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 33
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.yog.androidarena"
-        minSdkVersion 17
-        targetSdkVersion 29
+        minSdkVersion 19
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -23,8 +23,11 @@ android {
         dataBinding.enabled = true
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -58,7 +61,7 @@ dependencies {
 
     //shimmer
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.android.gms:play-services-auth:20.6.0'
 
     //ballon
     implementation "com.github.skydoves:balloon:1.1.2"
@@ -68,8 +71,18 @@ dependencies {
     implementation 'android.arch.paging:runtime:1.0.1'
     
     //Mobile Ads Sdk
-    implementation 'com.google.android.gms:play-services-ads:19.1.0'
+    implementation 'com.google.android.gms:play-services-ads:22.2.0'
 
     //Native Ad Template
     implementation project(':nativetemplates')
+
+    //RxJava and RxAndroid
+    implementation 'io.reactivex.rxjava2:rxjava:2.0.7'
+
+    // Because RxAndroid releases are few and far between, it is recommended you also
+    // explicitly depend on RxJava's latest version for bug fixes and new features.
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    //RxBinding
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
 }
