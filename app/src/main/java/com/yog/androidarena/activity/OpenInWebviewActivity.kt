@@ -2,13 +2,13 @@ package com.yog.androidarena.activity
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -29,9 +29,7 @@ class OpenInWebviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityOpenInWebviewBinding = DataBindingUtil.setContentView(this, R.layout.activity_open_in_webview)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         //setting webview client (To open any link in webview only not in browser)
         activityOpenInWebviewBinding.webView.webViewClient = MyWebviewClient()
         //Enable JavaScript
@@ -72,9 +70,7 @@ class OpenInWebviewActivity : AppCompatActivity() {
 
     private inner class MyWebviewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                view?.loadUrl(request?.url?.toString() ?: "")
-            }
+            view?.loadUrl(request?.url?.toString() ?: "")
             return false
         }
 
@@ -95,6 +91,4 @@ class OpenInWebviewActivity : AppCompatActivity() {
         else
             super.onBackPressed()
     }
-
-
 }

@@ -78,7 +78,7 @@ object General {
 
     fun loadNativeTemplateAd(context: Context,templateView: TemplateView, contentUrl: String) {
         val adLoader = AdLoader.Builder(context, Constants.NATIVE_AD_PRODUCTION_ID)
-                .forUnifiedNativeAd { unifiedNativeAd ->
+                .forNativeAd { unifiedNativeAd ->
                     val styles = NativeTemplateStyle.Builder()
                             .withMainBackgroundColor(
                                     ColorDrawable(context.resources.getColor(R.color.transperent))).build()

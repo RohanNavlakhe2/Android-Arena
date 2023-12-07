@@ -1,0 +1,38 @@
+
+W	java:S125¦"<This block of commented-out lines of code should be removed.(©ñ¢Áüÿÿÿÿ
+t
+java:S1450."^Remove the "allLibAndAdList" field and declare it as a local variable in the relevant methods.(ïé¡ç
+W	java:S125²"<This block of commented-out lines of code should be removed.(¡¬«™ÿÿÿÿÿ
+W	java:S125‚"<This block of commented-out lines of code should be removed.( ëÙ²ùÿÿÿÿ
+V	java:S125k"<This block of commented-out lines of code should be removed.(íã×Íşÿÿÿÿ
+R	java:S125´"<This block of commented-out lines of code should be removed.(åßĞÚ
+W	java:S125í"<This block of commented-out lines of code should be removed.(Ê×’Øùÿÿÿÿ
+W	java:S125ˆ"<This block of commented-out lines of code should be removed.(á»ç÷şÿÿÿÿ
+Q	java:S125{"<This block of commented-out lines of code should be removed.(ĞôŞ
+W	java:S125À"<This block of commented-out lines of code should be removed.(³ç¥¡üÿÿÿÿ
+W	java:S125ø"<This block of commented-out lines of code should be removed.(Û¨ÿİÿÿÿÿÿ
+K
+java:S3740Á"/Provide the parametrized type for this generic.(ìÔè”øÿÿÿÿ
+W	java:S125Ÿ"<This block of commented-out lines of code should be removed.(¨õšéùÿÿÿÿ
+W	java:S125"<This block of commented-out lines of code should be removed.(Èè¬Éÿÿÿÿÿ
+Z
+java:S1155ú">Use isEmpty() to check whether the collection is empty or not.(ñµûÿÿÿÿÿ
+W	java:S125"<This block of commented-out lines of code should be removed.(Ë›¶‚üÿÿÿÿ
+D
+java:S1185±"(Remove this method to simply inherit it.(İßéàúÿÿÿÿ
+R	java:S125"<This block of commented-out lines of code should be removed.(¢Å‡œ
+R	java:S125€"<This block of commented-out lines of code should be removed.(†Úƒ÷
+J
+java:S3740-"/Provide the parametrized type for this generic.(œãåÛÿÿÿÿÿ
+R	java:S125¨"<This block of commented-out lines of code should be removed.(´…õ
+R	java:S125²"<This block of commented-out lines of code should be removed.(ÌãÔŸ
+R	java:S125ó"<This block of commented-out lines of code should be removed.(ı­µš
+R	java:S125ì"<This block of commented-out lines of code should be removed.(¯µŠÙ
+R	java:S125ı"<This block of commented-out lines of code should be removed.(¼“¥•
+F
+java:S3740‰"/Provide the parametrized type for this generic.(–‚¨
+E
+java:S3740½"/Provide the parametrized type for this generic.(˜øÿ9
+R	java:S125—"<This block of commented-out lines of code should be removed.(ŒÀŒ’
+H
+java:S11728"&Remove these unused method parameters.(î•Éğûÿÿÿÿ8ğ¶Æ®Â/

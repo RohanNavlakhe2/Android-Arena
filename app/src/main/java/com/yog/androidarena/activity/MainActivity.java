@@ -24,6 +24,7 @@ import com.google.android.ads.nativetemplates.TemplateView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -201,29 +202,31 @@ public class MainActivity extends AppCompatActivity {
 
         TemplateView finalTemplateView = templateView;
 
-        AdLoader adLoader = new AdLoader.Builder(this, Constants.NATIVE_AD_PRODUCTION_ID)
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        if (isDestroyed())
-                            unifiedNativeAd.destroy();
-                        if (nativeAd != null)
-                            nativeAd.destroy();
+        AdLoader adLoader = new AdLoader.Builder(this,Constants.NATIVE_AD_PRODUCTION_ID)
+                .forNativeAd(nativeAd -> {
+                    if (isDestroyed())
+                        nativeAd.destroy();
+                    if (nativeAd != null)
+                        nativeAd.destroy();
 
-                        nativeAd = unifiedNativeAd;
+                    nativeAd = nativeAd;
 
-                        NativeTemplateStyle styles = new NativeTemplateStyle.Builder()
-                                .withMainBackgroundColor(new ColorDrawable(
-                                        getResources().getColor(R.color.transperent)
-                                )).build();
+                    NativeTemplateStyle styles = new NativeTemplateStyle.Builder()
+                            .withMainBackgroundColor(new ColorDrawable(
+                                    getResources().getColor(R.color.transperent)
+                            )).build();
 
-                        if (finalTemplateView != null) {
-                            finalTemplateView.setStyles(styles);
-                            finalTemplateView.setNativeAd(unifiedNativeAd);
-                        }
+                    if (finalTemplateView != null) {
+                        finalTemplateView.setStyles(styles);
+                        finalTemplateView.setNativeAd(nativeAd);
                     }
-                })
-                .withAdListener(new AdListener() {
+                }).withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
+                        Timber.d("Ad Failed to Load: %s", loadAdError.getMessage());
+                        loadAd(index + addAdAtEvery, libAndAdList);
+                    }
 
                     @Override
                     public void onAdLoaded() {
@@ -231,14 +234,8 @@ public class MainActivity extends AppCompatActivity {
                         Timber.d("Ad Loaded");
                         loadAd(index + addAdAtEvery, libAndAdList);
                     }
-
-                    @Override
-                    public void onAdFailedToLoad(int i) {
-                        super.onAdFailedToLoad(i);
-                        Timber.d("Ad Failed to Load: %s", i);
-                        loadAd(index + addAdAtEvery, libAndAdList);
-                    }
                 }).build();
+
 
         int randomAdUrl = new Random().nextInt(Constants.AD_TYPES.size());
         adLoader.loadAd(new AdRequest.Builder()

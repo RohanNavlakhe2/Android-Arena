@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -25,12 +26,14 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.VideoController;
 import com.google.android.gms.ads.VideoOptions;
-import com.google.android.gms.ads.formats.MediaView;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.nativead.MediaView;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.yog.androidarena.R;
@@ -60,7 +63,7 @@ public class LibExpansionActivity extends AppCompatActivity {
         activityLibExpansionBinding = DataBindingUtil.setContentView(this, R.layout.activity_lib_expansion);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimary));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
 
         //load ad (Which at the end of the page)
@@ -88,8 +91,8 @@ public class LibExpansionActivity extends AppCompatActivity {
             //setting Toolbar Title
 
             String libraryName = "";
-            if(map.get("0") != null)
-               libraryName = map.get("0").toString();
+            if (map.get("0") != null)
+                libraryName = map.get("0").toString();
             activityLibExpansionBinding.includeToolbar.libNameTitle.setText(libraryName);
         }
 
@@ -216,31 +219,26 @@ public class LibExpansionActivity extends AppCompatActivity {
     private void fetchAd(String randomAdUrl) {
         AdLoader.Builder builder = new AdLoader.Builder(this, Constants.NATIVE_AD_PRODUCTION_ID);
 
-        builder.forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-            // OnUnifiedNativeAdLoadedListener implementation.
-            @Override
-            public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                // If this callback occurs after the activity is destroyed, you must call
-                // destroy and return or you may get a memory leak.
-                if (isDestroyed()) {
-                    unifiedNativeAd.destroy();
-                    return;
-                }
-                // You must call destroy on old ads when you are done with them,
-                // otherwise you will have a memory leak.
-                if (nativeAd != null) {
-                    nativeAd.destroy();
-                }
-                nativeAd = unifiedNativeAd;
-                FrameLayout frameLayout =
-                        findViewById(R.id.fl_adplaceholder);
-                UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater()
-                        .inflate(R.layout.ad_unified, null);
-                populateUnifiedNativeAdView(unifiedNativeAd, adView);
-                frameLayout.removeAllViews();
-                frameLayout.addView(adView);
+        builder.forNativeAd(nativeAd -> {
+            // If this callback occurs after the activity is destroyed, you must call
+            // destroy and return or you may get a memory leak.
+            if (isDestroyed()) {
+                nativeAd.destroy();
+                return;
             }
-
+            // You must call destroy on old ads when you are done with them,
+            // otherwise you will have a memory leak.
+            if (nativeAd != null) {
+                nativeAd.destroy();
+            }
+            nativeAd = nativeAd;
+            FrameLayout frameLayout =
+                    findViewById(R.id.fl_adplaceholder);
+            NativeAdView adView = (NativeAdView) getLayoutInflater()
+                    .inflate(R.layout.ad_unified, null);
+            populateUnifiedNativeAdView(nativeAd, adView);
+            frameLayout.removeAllViews();
+            frameLayout.addView(adView);
         });
 
         VideoOptions videoOptions = new VideoOptions.Builder()
@@ -256,9 +254,10 @@ public class LibExpansionActivity extends AppCompatActivity {
         AdLoader adLoader =
                 builder
                         .withAdListener(new AdListener() {
+
                                             @Override
-                                            public void onAdFailedToLoad(int i) {
-                                                super.onAdFailedToLoad(i);
+                                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                                super.onAdFailedToLoad(loadAdError);
                                                 Timber.d("Ad Load Failed");
                                             }
                                         }
@@ -268,7 +267,7 @@ public class LibExpansionActivity extends AppCompatActivity {
         adLoader.loadAd(new AdRequest.Builder().setContentUrl(randomAdUrl).build());
     }
 
-    private void populateUnifiedNativeAdView(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
+    private void populateUnifiedNativeAdView(NativeAd nativeAd, NativeAdView adView) {
         // Set the media view.
         adView.setMediaView((MediaView) adView.findViewById(R.id.ad_media));
 
@@ -345,7 +344,7 @@ public class LibExpansionActivity extends AppCompatActivity {
 
         // Get the video controller for the ad. One will always be provided, even if the ad doesn't
         // have a video asset.
-        VideoController vc = nativeAd.getVideoController();
+        VideoController vc = nativeAd.getMediaContent().getVideoController();
 
         // Updates the UI to say whether or not this ad has a video asset.
         if (vc.hasVideoContent()) {
