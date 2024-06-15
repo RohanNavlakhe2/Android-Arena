@@ -5,7 +5,6 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 33
-    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.yog.androidarena"
         minSdkVersion 21
@@ -23,8 +22,8 @@ android {
         dataBinding.enabled = true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_15
-        targetCompatibility JavaVersion.VERSION_15
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding true
@@ -45,7 +44,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.1.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     //multidex for this issue -> Cannot fit requested classes in a single dex
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -85,4 +84,7 @@ dependencies {
 
     //RxBinding
     implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
+
+    //This fixes duplicate class build error
+    implementation 'com.google.guava:guava:27.0.1-android'
 }
