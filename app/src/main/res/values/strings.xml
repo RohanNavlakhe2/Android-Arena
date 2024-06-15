@@ -29,4 +29,8 @@
 
     <string name="ad_attribution">Ad</string>
 
+    <!--Banner Ad IDs-->
+    <string name="banner_test_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="banner_production_id">ca-app-pub-6674467650273820/4758104134</string>
+
 </resources>

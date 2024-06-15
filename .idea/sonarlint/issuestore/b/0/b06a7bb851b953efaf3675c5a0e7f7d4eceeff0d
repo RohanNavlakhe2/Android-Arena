@@ -1,0 +1,11 @@
+
+G
+java:S1874"1Remove this use of "AsyncTask"; it is deprecated.(ì­ù
+`
+java:S1874"JDon't override a deprecated method or explicitly mark it as "@Deprecated".(ËĞƒ
+I
+java:S1874"4Remove this use of "onPreExecute"; it is deprecated.(”•P
+e
+java:S1874-"JDon't override a deprecated method or explicitly mark it as "@Deprecated".(Œÿµºøÿÿÿÿ
+K
+java:S1874."5Remove this use of "onPostExecute"; it is deprecated.(Ü«Š„

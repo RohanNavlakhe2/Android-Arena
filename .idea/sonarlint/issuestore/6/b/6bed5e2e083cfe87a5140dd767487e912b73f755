@@ -1,0 +1,27 @@
+
+H
+java:S1172D"&Remove these unused method parameters.(î•Éðûÿÿÿÿ8˜·Æ®Â/
+]
+java:S1144s"HRemove this unused private "getThingsYouShouldKnowListFromCloud" method.(óìÿD
+W	java:S125›"<This block of commented-out lines of code should be removed.(úÎ®÷ùÿÿÿÿ
+P	java:S125w"<This block of commented-out lines of code should be removed.(šóÐd
+R	java:S125¦"<This block of commented-out lines of code should be removed.(ò¿ÚÝ
+W	java:S125Þ"<This block of commented-out lines of code should be removed.(üâ‡Òúÿÿÿÿ
+W	java:S125¢"<This block of commented-out lines of code should be removed.(©ñ¢Áüÿÿÿÿ
+R	java:S125—"<This block of commented-out lines of code should be removed.(¢Å‡œ
+W	java:S125¿"<This block of commented-out lines of code should be removed.(úéåÁûÿÿÿÿ
+W	java:S125ë"<This block of commented-out lines of code should be removed.(—®Ûöÿÿÿÿÿ
+F
+java:S1066·"/Merge this if statement with the enclosing one.(Úž™ô
+J
+java:S37400"/Provide the parametrized type for this generic.(œãåÛÿÿÿÿÿ
+F
+java:S3740…"/Provide the parametrized type for this generic.(–‚¨
+Q	java:S125Q"<This block of commented-out lines of code should be removed.(Ž™Ÿ´
+R	java:S125¤"<This block of commented-out lines of code should be removed.(´…õ
+R	java:S125´"<This block of commented-out lines of code should be removed.(åßÐÚ
+Q	java:S125"<This block of commented-out lines of code should be removed.(ÇµÖ
+F
+java:S10680"+Remove this unused "mapList" private field.(œãåÛÿÿÿÿÿ
+R	java:S125°"<This block of commented-out lines of code should be removed.(‰ì’ë
+R	java:S125Ë"<This block of commented-out lines of code should be removed.(¿çþ®

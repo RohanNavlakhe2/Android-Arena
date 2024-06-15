@@ -2,17 +2,17 @@ package com.yog.androidarena.activity
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
 import com.yog.androidarena.R
 import com.yog.androidarena.databinding.ActivityOpenInWebviewBinding
 import com.yog.androidarena.util.Constants
@@ -28,13 +28,15 @@ class OpenInWebviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityOpenInWebviewBinding = DataBindingUtil.setContentView(this, R.layout.activity_open_in_webview)
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         //setting webview client (To open any link in webview only not in browser)
         activityOpenInWebviewBinding.webView.webViewClient = MyWebviewClient()
         //Enable JavaScript
         activityOpenInWebviewBinding.webView.settings.javaScriptEnabled = true
 
         //load url
-        activityOpenInWebviewBinding.webView.loadUrl(intent.getStringExtra(Constants.LINK))
+        activityOpenInWebviewBinding.webView.loadUrl(intent.getStringExtra(Constants.LINK) ?: "")
 
         //Progress on loading
         progressOnLoading()
@@ -44,7 +46,7 @@ class OpenInWebviewActivity : AppCompatActivity() {
     }
 
     private fun loadBannerAd() {
-        MobileAds.initialize(this) {}
+        //MobileAds.initialize(this) {}
         val randomAdUrl = Random().nextInt(Constants.AD_TYPES.size)
         val adRequest = AdRequest.Builder().setContentUrl(Constants.AD_TYPES[randomAdUrl]).build()
         activityOpenInWebviewBinding.adView.loadAd(adRequest)
@@ -68,9 +70,7 @@ class OpenInWebviewActivity : AppCompatActivity() {
 
     private inner class MyWebviewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                view?.loadUrl(request?.url?.toString())
-            }
+            view?.loadUrl(request?.url?.toString() ?: "")
             return false
         }
 
@@ -91,6 +91,4 @@ class OpenInWebviewActivity : AppCompatActivity() {
         else
             super.onBackPressed()
     }
-
-
 }

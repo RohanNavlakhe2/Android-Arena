@@ -1,0 +1,10 @@
+
+b
+java:S1301°"KReplace this "switch" statement by "if" statements to increase readability.(é∫÷ç
+8	java:S131°""Add a default case to this switch.(é∫÷ç
+V	java:S125O"<This block of commented-out lines of code should be removed.(˛™∆∆˝ˇˇˇˇ
+Q	java:S125{"<This block of commented-out lines of code should be removed.(òŒã√
+V	java:S125@"<This block of commented-out lines of code should be removed.(Ô≈ Èˇˇˇˇˇ
+V	java:S125F"<This block of commented-out lines of code should be removed.(õ≥»ﬂ˛ˇˇˇˇ
+V	java:S125Q"<This block of commented-out lines of code should be removed.(Èÿª⁄˚ˇˇˇˇ
+]	java:S110"<This class has 9 parents which is greater than 5 authorized.(ﬂÒô·˝ˇˇˇˇ8ÏëÜÎ⁄/

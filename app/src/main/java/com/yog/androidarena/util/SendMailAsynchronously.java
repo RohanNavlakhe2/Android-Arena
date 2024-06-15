@@ -23,6 +23,8 @@ public class SendMailAsynchronously extends AsyncTask<String,String,String>
 
     @Override
     protected String doInBackground(String... strings) {
+
+
         try {
             GMailSender sender = new GMailSender("anroidartsdevelopers@gmail.com",
                     "supercoder2@");
@@ -33,6 +35,9 @@ public class SendMailAsynchronously extends AsyncTask<String,String,String>
             Timber.e(e);
             return "Email Send failed";
         }
+
+
+
 
     }
 

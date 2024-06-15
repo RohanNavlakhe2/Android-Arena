@@ -1,0 +1,20 @@
+
+E
+java:S3740U"/Provide the parametrized type for this generic.(¼ÎÒ
+;
+java:S2119C"Save and re-use this "Random".(‰€‹à8¸€ßæÜ/
+Q	java:S125E"<This block of commented-out lines of code should be removed.(İÚ¶˜
+V	java:S125z"<This block of commented-out lines of code should be removed.(²ÿ¨Âúÿÿÿÿ
+W	java:S125˜"<This block of commented-out lines of code should be removed.(‡¯«†øÿÿÿÿ
+R	java:S125Ÿ"<This block of commented-out lines of code should be removed.(¡¬‰
+R	java:S125¿"<This block of commented-out lines of code should be removed.(ÄüÒÜ
+i
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(áµÿú
+R	java:S125â"<This block of commented-out lines of code should be removed.(€¸Š¢
+R	java:S125í"<This block of commented-out lines of code should be removed.(Ô¶ç¸
+R	java:S125ô"<This block of commented-out lines of code should be removed.(æêŸÍ
+W	java:S125„"<This block of commented-out lines of code should be removed.(ÒÌâ–øÿÿÿÿ
+c
+java:S1192È"GDefine a constant instead of duplicating this literal "ballon" 3 times.(î•‹Ñøÿÿÿÿ
+V
+java:S2259™"?A "NullPointerException" could be thrown; "e" is nullable here.(–¾‡–

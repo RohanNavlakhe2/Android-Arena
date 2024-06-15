@@ -1,0 +1,39 @@
+
+Q	java:S125J"<This block of commented-out lines of code should be removed.(žä·î
+<	java:S131v""Add a default case to this switch.(ªÒŒýúÿÿÿÿ
+W	java:S125”"<This block of commented-out lines of code should be removed.(õ€ƒÿÿÿÿÿ
+Q	java:S125—"<This block of commented-out lines of code should be removed.(„‡ü7
+R	java:S125›"<This block of commented-out lines of code should be removed.(¦Ã¤Ø
+n
+java:S3776¢"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(˜öîûýÿÿÿÿ
+R
+java:S2696¯"6Make the enclosing method "static" or remove this set.(Ù¦·°üÿÿÿÿ
+G
+java:S1874Ù"0Remove this use of "getColor"; it is deprecated.(“†£¶
+5
+java:S2119ó"Save and re-use this "Random".(‰€‹à
+–
+java:S5803ô"zRemove this usage of "AdRequest", it is annotated with @VisibleForTesting and should not be accessed from production code.(’Ü„Àûÿÿÿÿ
+=	java:S131Ÿ""Add a default case to this switch.(ã¿Ÿßûÿÿÿÿ
+W	java:S125¿"<This block of commented-out lines of code should be removed.(©¶ÀÚüÿÿÿÿ
+8	java:S131Õ""Add a default case to this switch.(´ÝÚÜ
+J
+java:S1172î".Remove this unused method parameter "context".(ÀåÆšûÿÿÿÿ
+W
+java:S1144„";Remove this unused private "getFirebaseDeviceToken" method.(£Ûïšøÿÿÿÿ
+c
+java:S1192p"HDefine a constant instead of duplicating this literal "TabNoti" 3 times.(ÀÜ¸Ñúÿÿÿÿ
+?
+java:S1604…"(Make this anonymous inner class a lambda(¸‚õ
+D
+java:S1604‘"(Make this anonymous inner class a lambda(„¬é¿øÿÿÿÿ
+D
+java:S1604¦"(Make this anonymous inner class a lambda(¯‘àçúÿÿÿÿ
+?
+java:S1604Í"(Make this anonymous inner class a lambda(Úð¥Í
+?
+java:S1604›"(Make this anonymous inner class a lambda(Ú±Ï
+>
+java:S1604ò"(Make this anonymous inner class a lambda(ÝÇñ#
+D
+java:S1604ù"(Make this anonymous inner class a lambda(ò¥ªƒþÿÿÿÿ

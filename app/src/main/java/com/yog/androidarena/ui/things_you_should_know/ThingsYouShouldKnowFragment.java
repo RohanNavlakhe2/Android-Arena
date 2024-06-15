@@ -50,7 +50,7 @@ public class ThingsYouShouldKnowFragment extends Fragment {
     private List<DocumentSnapshot> documentSnapshotList;
     private boolean isLastPage = false;
     private boolean isLoading = false;
-    private boolean isScrolling = false;
+     private boolean isScrolling = false;
     private int latestLoadedThingsListSize;
     private static final int PAGE_SIZE = 10;
     private DocumentSnapshot lastLoadedListItem;
