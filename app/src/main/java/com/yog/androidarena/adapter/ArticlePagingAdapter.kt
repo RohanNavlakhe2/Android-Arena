@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
-import com.firebase.ui.firestore.paging.LoadingState
 import com.yog.androidarena.R
 import com.yog.androidarena.activity.OpenInWebviewActivity
 import com.yog.androidarena.databinding.ArticlesRecBinding
@@ -66,21 +65,6 @@ class ArticlePagingAdapter
         else
             AD_VIEW_TYPE
 
-    }
-
-    override fun onLoadingStateChanged(state: LoadingState) {
-         when(state)
-         {
-             LoadingState.LOADING_INITIAL->Timber.tag("ar_frag").d("loadiNG initial")
-             LoadingState.FINISHED->
-             {
-                 Timber.tag("ar_frag").d("loading finished")
-                 articlesFragment.hideShimmer()
-
-             }
-             LoadingState.ERROR->Timber.tag("ar_frag").d("loading error")
-             else->Timber.tag("ar_frag").d("else")
-         }
     }
 
     private fun openLinkInWebView(url: String) {

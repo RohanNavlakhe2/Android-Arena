@@ -158,14 +158,11 @@ public class GoogleSignInActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.sign_in_button:
-                signIn();
-                break;
-            case R.id.notNowBtn:
-                General.INSTANCE.createBooleanSP(Constants.NOT_NOW,true, this);
-                updateUI(null);
-                break;
+        if(view.getId() == R.id.sign_in_button){
+            signIn();
+        }else if(view.getId() == R.id.notNowBtn){
+            General.INSTANCE.createBooleanSP(Constants.NOT_NOW,true, this);
+            updateUI(null);
         }
     }
 }

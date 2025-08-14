@@ -10,7 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.paging.CombinedLoadStates;
+import androidx.paging.LoadState;
+import androidx.paging.LoadStates;
 import androidx.paging.PagedList;
+import androidx.paging.PagingConfig;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
@@ -77,11 +81,7 @@ public class ArticlesFragment extends Fragment {
 
 
         // This configuration comes from the Paging Support Library
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(10)
-                .setPageSize(20)
-                .build();
+        PagingConfig config = new PagingConfig(20,10,false);
 
         FirestorePagingOptions<ArticleModel> options = new FirestorePagingOptions.Builder<ArticleModel>()
                 .setLifecycleOwner(this)
@@ -93,6 +93,16 @@ public class ArticlesFragment extends Fragment {
         ArticlePagingAdapter articlePagingAdapter = new ArticlePagingAdapter(this,context, options);
         fragmentArticlesBinding.articleRec.setLayoutManager(new LinearLayoutManager(context));
         fragmentArticlesBinding.articleRec.setAdapter(articlePagingAdapter);
+
+        articlePagingAdapter.addLoadStateListener(combinedLoadStates -> {
+            LoadState loadStates = combinedLoadStates.getSource().getRefresh();
+            if (loadStates instanceof LoadState.Loading) {
+                showShimmer();
+            } else {
+                hideShimmer();
+            }
+            return null;
+        });
 
 
     }

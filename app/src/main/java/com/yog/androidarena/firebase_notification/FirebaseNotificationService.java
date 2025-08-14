@@ -10,10 +10,8 @@ import android.media.AudioAttributes;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.yog.androidarena.R;
@@ -30,23 +28,18 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
     //This string is a device token (This method is called whenver Firebase generates new Device Token)
     @Override
     public void onNewToken(@NonNull String s) {
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Timber.d(task.getException(), "Task is not successful in onNewToken Method");
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        Timber.d("Task Successful in onNewToken");
-                        String token = Objects.requireNonNull(task.getResult()).getToken();
-                        Timber.d("Token :%s",token);
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Timber.d(task.getException(), "Task is not successful in onNewToken Method");
+                        return;
                     }
+
+                    // Get new Instance ID token
+                    Timber.d("Task Successful in onNewToken");
+                    String token = task.getResult();
+                    Timber.d("Token :%s",token);
                 });
-
-
     }
 
     @Override

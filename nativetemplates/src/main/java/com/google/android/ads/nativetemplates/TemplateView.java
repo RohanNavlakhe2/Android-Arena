@@ -33,6 +33,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.gms.ads.nativead.MediaView;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
+import com.yog.androidarena.R;
 
 
 /** Base class for a template view. * */

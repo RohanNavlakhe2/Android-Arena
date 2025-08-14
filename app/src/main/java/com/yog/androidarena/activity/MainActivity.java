@@ -33,8 +33,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.yog.androidarena.R;
 import com.yog.androidarena.databinding.ActivityMainBinding;
@@ -130,15 +129,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getFirebaseDeviceToken() {
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String token = instanceIdResult.getToken();
-                Timber.tag("fcm_token").d(token);
-            }
-        });
-    }
+
 
     private void fcmSubscribeToTopic() {
         //Topics
@@ -281,9 +272,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 Timber.d("On Destination Changed");
-                switch (destination.getId()) {
+                int destinationId = destination.getId();
+                if(destinationId == R.id.navigation_home){
+                    fragmentOrder.add(0);
+                }else if(destinationId == R.id.navigation_libs){
+                    if (fragmentOrder.get(fragmentOrder.size() - 1) != 1)
+                        fragmentOrder.add(1);
+                }else if(destinationId == R.id.navigation_articles){
+                    if (fragmentOrder.get(fragmentOrder.size() - 1) != 2)
+                        fragmentOrder.add(2);
+                }
+               /* switch (destination.getId()) {
                     case R.id.navigation_home:
-                        fragmentOrder.add(0);
+
                         break;
                     case R.id.navigation_libs:
                         if (fragmentOrder.get(fragmentOrder.size() - 1) != 1)
@@ -293,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                         if (fragmentOrder.get(fragmentOrder.size() - 1) != 2)
                             fragmentOrder.add(2);
                         break;
-                }
+                }*/
                 Timber.d("Fragment Order Size:" + fragmentOrder.size());
             }
         });

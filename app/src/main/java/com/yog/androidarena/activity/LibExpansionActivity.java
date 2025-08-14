@@ -188,9 +188,8 @@ public class LibExpansionActivity extends AppCompatActivity {
                 .setCornerRadius(4f)
                 .setBackgroundColor(ContextCompat.getColor(this, R.color.light_green))
                 .setBalloonAnimation(BalloonAnimation.CIRCULAR)
-                .setArrowVisible(true)
                 .build();
-        balloon.show(activityLibExpansionBinding.linkRec, 100, 2);
+        balloon.showAtCenter(activityLibExpansionBinding.linkRec);
         //balloon.show(activityLibExpansionBinding.parent);
 
 

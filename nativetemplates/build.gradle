@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace "com.yog.androidarena"
     compileSdk 34
 
     defaultConfig {
